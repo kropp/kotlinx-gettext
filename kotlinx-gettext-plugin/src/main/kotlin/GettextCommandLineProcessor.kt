@@ -27,8 +27,10 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 class GettextCommandLineProcessor : CommandLineProcessor {
     companion object {
         private const val OPTION_POT_FILE = "potFile"
+        private const val OPTION_KEYWORD = "k"
 
         val ARG_POT_FILE = CompilerConfigurationKey<String>(OPTION_POT_FILE)
+        val ARG_KEYWORDS = CompilerConfigurationKey<List<String>>(OPTION_KEYWORD)
     }
 
     override val pluginId: String = KOTLIN_PLUGIN_ID
@@ -40,6 +42,13 @@ class GettextCommandLineProcessor : CommandLineProcessor {
             description = ".pot file to extract messages to",
             required = true,
         ),
+        CliOption(
+            optionName = OPTION_KEYWORD,
+            valueDescription = "keyword",
+            description = "method's name to look for, in xgettext format",
+            allowMultipleOccurrences = true,
+            required = false
+        )
     )
 
     override fun processOption(
@@ -49,6 +58,7 @@ class GettextCommandLineProcessor : CommandLineProcessor {
     ) {
         return when (option.optionName) {
             OPTION_POT_FILE -> configuration.put(ARG_POT_FILE, value)
+            OPTION_KEYWORD -> configuration.add(ARG_KEYWORDS, value)
             else -> throw IllegalArgumentException("Unexpected config option ${option.optionName}")
         }
     }

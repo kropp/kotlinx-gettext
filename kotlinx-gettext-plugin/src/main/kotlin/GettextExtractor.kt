@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class GettextExtractor(
     private val messageCollector: MessageCollector,
+    private val keywords: List<String>,
     private val relativePath: String,
     private var fileEntry: IrFileEntry,
 ) : IrElementTransformerVoid() {
@@ -38,7 +39,7 @@ class GettextExtractor(
         super.visitCall(expression)
 
         val signature = expression.symbol.signature as? IdSignature.CommonSignature
-        if (signature?.shortName == "tr") {
+        if (signature?.shortName in keywords) {
             val valueArgument = expression.getValueArgument(0)
             if (valueArgument is IrConst<*> && valueArgument.kind == IrConstKind.String) {
                 val reference = "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}"

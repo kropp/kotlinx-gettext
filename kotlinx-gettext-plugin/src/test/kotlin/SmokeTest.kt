@@ -19,6 +19,7 @@ package com.github.kropp.kotlinx.gettext
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.junit.jupiter.api.Test
+import java.io.File
 import kotlin.test.assertEquals
 
 class SmokeTest {
@@ -51,11 +52,27 @@ fun tr(text: String) {}
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
 
-    private fun compile(vararg sourceFile: SourceFile): KotlinCompilation.Result {
+    @Test
+    fun `custom keyword`() {
+        val result = compile(
+            SourceFile.kotlin(
+                "main.kt", """
+fun main() {
+  custom("Hello, World!")
+}
+fun custom(text: String) {}
+"""
+            ),
+            defaultKeywords = listOf("custom")
+        )
+        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+    }
+
+    private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()
             useIR = true
-            compilerPlugins = listOf(GettextComponentRegistrar())
+            compilerPlugins = listOf(GettextComponentRegistrar(File(workingDir, "i18n.pot").absolutePath, defaultKeywords))
             inheritClassPath = true
         }.compile()
     }

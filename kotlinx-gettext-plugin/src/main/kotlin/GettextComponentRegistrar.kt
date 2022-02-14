@@ -30,11 +30,13 @@ const val KOTLIN_PLUGIN_ID = "kotlinx-gettext"
 @AutoService(ComponentRegistrar::class)
 class GettextComponentRegistrar(
     private val defaultPotFile: String,
+    private val defaultKeywords: List<String>,
 ) : ComponentRegistrar {
 
     @Suppress("unused") // Used by service loader
     constructor() : this(
-        defaultPotFile = "i18n.pot"
+        defaultPotFile = "i18n.pot",
+        defaultKeywords = listOf("tr"),
     )
 
     override fun registerProjectComponents(
@@ -45,8 +47,10 @@ class GettextComponentRegistrar(
         val file = File(configuration.get(GettextCommandLineProcessor.ARG_POT_FILE, defaultPotFile))
         runCatching { file.parentFile.mkdirs() }
 
+        val keywords = configuration.getList(GettextCommandLineProcessor.ARG_KEYWORDS).ifEmpty { defaultKeywords }
+
         val basePath = project.basePath?.let(::File) ?: File("")
 
-        IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, basePath, file))
+        IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, keywords, basePath, file))
     }
 }

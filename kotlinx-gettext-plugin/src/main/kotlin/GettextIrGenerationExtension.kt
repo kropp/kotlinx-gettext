@@ -25,6 +25,7 @@ import java.io.File
 
 class GettextIrGenerationExtension(
     private val messageCollector: MessageCollector,
+    private val keywords: List<String>,
     private val basePath: File,
     private val potFile: File,
 ) : IrGenerationExtension {
@@ -41,7 +42,7 @@ class GettextIrGenerationExtension(
                 } catch (_: Throwable) {
                     f.name
                 }
-            val extractor = GettextExtractor(messageCollector, relativePath, file.fileEntry)
+            val extractor = GettextExtractor(messageCollector, keywords, relativePath, file.fileEntry)
             extractor.visitFile(file)
             messages += extractor.msgIds
         }
