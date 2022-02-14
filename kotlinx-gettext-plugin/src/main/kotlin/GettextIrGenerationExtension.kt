@@ -18,7 +18,6 @@ package com.github.kropp.kotlinx.gettext
 
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import java.io.File
@@ -30,8 +29,6 @@ class GettextIrGenerationExtension(
     private val potFile: File,
 ) : IrGenerationExtension {
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        messageCollector.report(CompilerMessageSeverity.LOGGING, "Extracting strings to pot file $potFile")
-
         val messages = mutableListOf<MsgId>()
 
         for (file in moduleFragment.files) {

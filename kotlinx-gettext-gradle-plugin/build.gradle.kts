@@ -3,12 +3,22 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("java-gradle-plugin")
     kotlin("jvm")
+    `maven-publish`
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("gradle-plugin-api"))
     testImplementation(kotlin("test"))
+}
+
+gradlePlugin {
+    plugins {
+        create("kotlinx-gettext") {
+            id = "com.github.kropp.kotlinx-gettext"
+            implementationClass = "com.github.kropp.kotlinx.gettext.gradle.KotlinxGettextGradlePlugin"
+        }
+    }
 }
 
 tasks.test {

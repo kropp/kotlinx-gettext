@@ -23,9 +23,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
-const val KOTLIN_PLUGIN_ID = "kotlinx-gettext"
-const val KOTLIN_PLUGIN_GROUP = "com.github.kropp"
-const val KOTLIN_PLUGIN_NAME = "kotlinx-gettext"
+const val KOTLIN_PLUGIN_ID = "com.github.kropp.kotlinx-gettext"
+const val KOTLIN_PLUGIN_GROUP = "com.github.kropp.kotlinx-gettext"
+const val KOTLIN_PLUGIN_NAME = "kotlinx-gettext-plugin"
 const val KOTLIN_PLUGIN_VERSION = "1.0-SNAPSHOT"
 
 @Suppress("unused")
@@ -51,7 +51,8 @@ class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
         val extension = project.extensions.getByType(GettextGradleExtension::class.java)
         return project.provider {
             listOf(
-                SubpluginOption(key = "pot", value = extension.potFileProperty.get().asFile.path),
+                SubpluginOption(key = "potFile", value = extension.potFile.get().asFile.path),
+//                SubpluginOption(key = "keywords", value = "\"${extension.keywords.get().joinToString(";")}\""),
             )
         }
     }

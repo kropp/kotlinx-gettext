@@ -1,11 +1,12 @@
 plugins {
     kotlin("jvm") version "1.6.10" apply false
+    id("com.google.devtools.ksp") version "1.6.10-1.0.2" apply false
 }
 
-group = "com.github.kropp"
-version = "1.0-SNAPSHOT"
-
 allprojects {
+    group = "com.github.kropp.kotlinx-gettext"
+    version = "1.0-SNAPSHOT"
+
     repositories {
         mavenCentral()
     }
