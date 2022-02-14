@@ -31,6 +31,8 @@ class GettextIrGenerationExtension(
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         messageCollector.report(CompilerMessageSeverity.LOGGING, "Extracting strings to pot file $potFile")
 
+        val messages = mutableListOf<MsgId>()
+
         for (file in moduleFragment.files) {
             val f = File(file.fileEntry.name)
             val relativePath =
@@ -41,6 +43,11 @@ class GettextIrGenerationExtension(
                 }
             val extractor = GettextExtractor(messageCollector, relativePath, file.fileEntry)
             extractor.visitFile(file)
+            messages += extractor.msgIds
+        }
+
+        potFile.outputStream().use {
+            PotFile(messages).generate(it)
         }
     }
 }
