@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
 import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import java.io.File
 
 const val KOTLIN_PLUGIN_ID = "kotlinx-gettext"
 
@@ -41,8 +42,11 @@ class GettextComponentRegistrar(
         configuration: CompilerConfiguration
     ) {
         val messageCollector = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
-        val file = configuration.get(GettextCommandLineProcessor.ARG_POT_FILE, defaultPotFile)
+        val file = File(configuration.get(GettextCommandLineProcessor.ARG_POT_FILE, defaultPotFile))
+        runCatching { file.parentFile.mkdirs() }
 
-        IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, file))
+        val basePath = project.basePath?.let(::File) ?: File("")
+
+        IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, basePath, file))
     }
 }

@@ -21,12 +21,26 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import java.io.File
 
 class GettextIrGenerationExtension(
     private val messageCollector: MessageCollector,
-    private val potFile: String
+    private val basePath: File,
+    private val potFile: File,
 ) : IrGenerationExtension {
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         messageCollector.report(CompilerMessageSeverity.LOGGING, "Extracting strings to pot file $potFile")
+
+        for (file in moduleFragment.files) {
+            val f = File(file.fileEntry.name)
+            val relativePath =
+                try {
+                    f.relativeTo(basePath).path
+                } catch (_: Throwable) {
+                    f.name
+                }
+            val extractor = GettextExtractor(messageCollector, relativePath, file.fileEntry)
+            extractor.visitFile(file)
+        }
     }
 }

@@ -36,6 +36,21 @@ fun main() {
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
 
+    @Test
+    fun tr() {
+        val result = compile(
+            SourceFile.kotlin(
+                "main.kt", """
+fun main() {
+  tr("Hello, World!")
+}
+fun tr(text: String) {}
+"""
+            )
+        )
+        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+    }
+
     private fun compile(vararg sourceFile: SourceFile): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()
