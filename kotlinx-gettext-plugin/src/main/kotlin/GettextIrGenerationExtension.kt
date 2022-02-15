@@ -18,6 +18,7 @@ package com.github.kropp.kotlinx.gettext
 
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import java.io.File
@@ -26,10 +27,11 @@ class GettextIrGenerationExtension(
     private val messageCollector: MessageCollector,
     private val keywords: List<String>,
     private val basePath: File,
+    private val overwrite: Boolean,
     private val potFile: File,
 ) : IrGenerationExtension {
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        val messages = mutableListOf<PoEntry>()
+        val poEntries = mutableListOf<PoEntry>()
 
         for (file in moduleFragment.files) {
             val f = File(file.fileEntry.name)
@@ -39,13 +41,38 @@ class GettextIrGenerationExtension(
                 } catch (_: Throwable) {
                     f.name
                 }
-            val extractor = GettextExtractor(messageCollector, keywords.map { KeywordSpec(it) }, relativePath, file.fileEntry)
-            extractor.visitFile(file)
-            messages += extractor.poEntries
+            GettextExtractor(
+                messageCollector,
+                poEntries,
+                keywords.map { KeywordSpec(it) },
+                relativePath,
+                file.fileEntry
+            )
+                .visitFile(file)
         }
 
+        messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Collected ${poEntries.size} entries")
+
+        val poFile = if (overwrite) {
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Overwriting $potFile")
+            PoFile.fromUnmerged(poEntries)
+        } else if (!potFile.exists()) {
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Creating $potFile")
+            PoFile.fromUnmerged(poEntries)
+        } else {
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Updating $potFile")
+            val original = potFile.inputStream().use { PoFile.read(it) }
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Original $potFile: $original")
+            val updated = original.update(poEntries)
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Updated $potFile: $updated")
+            updated
+        }
+        messageCollector.report(
+            CompilerMessageSeverity.INFO,
+            "[gettext] Writing ${poFile.entries.size} entries to $potFile"
+        )
         potFile.outputStream().use {
-            PoFile.fromUnmerged(messages).write(it)
+            poFile.write(it)
         }
     }
 }

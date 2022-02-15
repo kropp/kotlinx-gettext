@@ -50,10 +50,12 @@ class GettextComponentRegistrar(
 
         messageCollector.report(CompilerMessageSeverity.INFO, "Extracting strings to pot file $file")
 
+        val overwrite = configuration.getBoolean(GettextCommandLineProcessor.ARG_OVERWRITE)
         val keywords = configuration.getList(GettextCommandLineProcessor.ARG_KEYWORDS).ifEmpty { defaultKeywords }
-
         val basePath = configuration.get(GettextCommandLineProcessor.ARG_BASE_DIR)?.let(::File) ?: File("")
 
-        IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, keywords, basePath, file))
+        val extension = GettextIrGenerationExtension(messageCollector, keywords, basePath, overwrite, file)
+
+        IrGenerationExtension.registerExtension(project, extension)
     }
 }

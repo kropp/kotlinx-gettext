@@ -62,7 +62,7 @@ data class PoEntry(
 ) {
     fun write(out: PrintStream) {
         for (comment in comments) {
-            out.println("#  $comment")
+            out.println("# $comment")
         }
         for (comment in extractedComments) {
             out.println("#. $comment")
@@ -71,7 +71,7 @@ data class PoEntry(
             out.println("#: $reference")
         }
         if (flags != null) {
-            out.println("#, ${flags}")
+            out.println("#, $flags")
         }
         for (prev in previous) {
             out.println("#| $prev")

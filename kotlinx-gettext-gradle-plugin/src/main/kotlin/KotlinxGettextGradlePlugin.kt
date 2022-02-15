@@ -51,8 +51,9 @@ class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
         val extension = project.extensions.getByType(GettextGradleExtension::class.java)
         return project.provider {
             listOf(
-                SubpluginOption(key = "potFile", value = extension.potFile.get().asFile.path),
                 SubpluginOption(key = "baseDir", value = extension.baseDir.get().asFile.path),
+                SubpluginOption(key = "potFile", value = extension.potFile.get().asFile.path),
+                SubpluginOption(key = "overwrite", value = extension.overwrite.get().toString()),
                 // ;COMMA; - magic separator used instead of comma, because comma is used by compiler
                 // see GettextCommandLineProcessor.kt
             ) + extension.keywords.get().map { SubpluginOption(key = "keyword", value = it.replace(",", ";COMMA;")) }

@@ -26,11 +26,13 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 @AutoService(CommandLineProcessor::class)
 class GettextCommandLineProcessor : CommandLineProcessor {
     companion object {
-        private const val OPTION_POT_FILE = "potFile"
         private const val OPTION_BASE_DIR = "baseDir"
+        private const val OPTION_POT_FILE = "potFile"
+        private const val OPTION_OVERWRITE = "overwrite"
         private const val OPTION_KEYWORD = "keyword"
 
         val ARG_BASE_DIR = CompilerConfigurationKey<String>(OPTION_POT_FILE)
+        val ARG_OVERWRITE = CompilerConfigurationKey<Boolean>(OPTION_OVERWRITE)
         val ARG_POT_FILE = CompilerConfigurationKey<String>(OPTION_BASE_DIR)
         val ARG_KEYWORDS = CompilerConfigurationKey<List<String>>(OPTION_KEYWORD)
     }
@@ -51,8 +53,14 @@ class GettextCommandLineProcessor : CommandLineProcessor {
             required = true,
         ),
         CliOption(
+            optionName = OPTION_OVERWRITE,
+            valueDescription = "boolean",
+            description = "always overwrite .pot file",
+            required = true,
+        ),
+        CliOption(
             optionName = OPTION_KEYWORD,
-            valueDescription = "keyword",
+            valueDescription = "string",
             description = "method name to look for in xgettext format",
             allowMultipleOccurrences = true,
             required = false
@@ -67,6 +75,7 @@ class GettextCommandLineProcessor : CommandLineProcessor {
         return when (option.optionName) {
             OPTION_BASE_DIR -> configuration.put(ARG_BASE_DIR, value)
             OPTION_POT_FILE -> configuration.put(ARG_POT_FILE, value)
+            OPTION_OVERWRITE -> configuration.put(ARG_OVERWRITE, value.toBooleanStrictOrNull() ?: false)
             // ;COMMA; - magic separator used instead of comma, because comma is used by compiler
             // see KotlinxGettextGradlePlugin.kt
             OPTION_KEYWORD -> configuration.add(ARG_KEYWORDS, value.replace(";COMMA;", ","))

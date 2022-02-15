@@ -42,12 +42,12 @@ class PoFile(
             if (updated != null) {
                 val newReferences = updated.flatMap { it.references }
                 val updatedPaths = newReferences.map { it.substringBefore(':') }
-                entry.copy(references = entry.references.filterNot { updatedPaths.any { path -> it.startsWith(path)} } + newReferences)
+                entry.copy(references = (entry.references.filterNot { updatedPaths.any { path -> it.startsWith(path)} } + newReferences).sortedWith(referenceComparator))
             } else {
                 entry
             }
         } + grouped.map { group ->
-            group.value.first().copy(references = group.value.flatMap { it.references })
+            group.value.first().copy(references = group.value.flatMap { it.references }.sortedWith(referenceComparator))
         }
         return PoFile(newEntries, header)
     }
@@ -62,6 +62,16 @@ class PoFile(
                         group.value.first().copy(references = group.value.flatMap { it.references })
                     }
             return PoFile(merged)
+        }
+
+        @JvmStatic
+        val referenceComparator = Comparator<String> { r1, r2 ->
+            val comparePaths = r1.substringBefore(':').compareTo(r2.substringBefore(':'))
+            if (comparePaths != 0) {
+                comparePaths
+            } else {
+                (r1.substringAfter(':').toIntOrNull() ?: 0).compareTo((r2.substringAfter(':').toIntOrNull() ?: 0))
+            }
         }
 
         @JvmStatic
@@ -95,16 +105,17 @@ class PoFile(
                             plural = null
                             cases = mutableListOf()
                         }
-                        line.startsWith("#  ") -> comments += line.substringAfter("#  ")
+                        line == "#" -> comments += ""
+                        line.startsWith("# ") -> comments += line.substringAfter("# ")
                         line.startsWith("#. ") -> extractedComments += line.substringAfter("#. ")
                         line.startsWith("#: ") -> references += line.substringAfter("#: ")
                         line.startsWith("#, ") -> flags = line.substringAfter("#, ")
                         line.startsWith("#| ") -> previous += line.substringAfter("#| ")
-                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctx ").trim('"')
+                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctxt ").trim('"')
                         line.startsWith("msgid ") -> text = line.substringAfter("msgid ").trim('"')
                         line.startsWith("msgid_plural ") -> plural = line.substringAfter("msgid_plural ").trim('"')
                         line.startsWith("msgstr ") -> cases += line.substringAfter("msgstr ").trim('"')
-                        line.startsWith("msgstr[") -> cases += line.substringAfter("msgstr[").substringAfter(']').trim('"')
+                        line.startsWith("msgstr[") -> cases += line.substringAfter("msgstr[").substringAfter("] ").trim('"')
                         else -> {
                             if (cases.isNotEmpty()) {
                                 cases[0] = cases[0] + "\"\n\"" + line.trim('"')
