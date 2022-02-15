@@ -31,19 +31,19 @@ class KeywordSpec(
         return (expression.symbol.signature as? IdSignature.CommonSignature)?.shortName == keyword
     }
 
-    fun process(expression: IrCall, reference: String): MsgId? {
+    fun process(expression: IrCall, reference: String): PoEntry? {
         when(args.size) {
             0 -> {
                 val text = getStringOrNull(expression, 0) ?: return null
-                return MsgId(listOf(reference), null, text, null)
+                return PoEntry(emptyList(), emptyList(), listOf(reference), flags(text), emptyList(), null, text, null, emptyList())
             }
             2 -> {
                 return if (args[0].isContext) {
                     val text = getStringOrNull(expression, args[1].index - 1) ?: return null
-                    MsgId(listOf(reference), getStringOrNull(expression, args[0].index - 1), text, null)
+                    PoEntry(emptyList(), emptyList(), listOf(reference), flags(text), emptyList(), getStringOrNull(expression, args[0].index - 1), text, null, emptyList())
                 } else {
                     val text = getStringOrNull(expression, args[0].index - 1) ?: return null
-                    MsgId(listOf(reference), null, text, getStringOrNull(expression, args[1].index - 1))
+                    PoEntry(emptyList(), emptyList(), listOf(reference), flags(text), emptyList(), null, text, getStringOrNull(expression, args[1].index - 1), listOf("", ""))
                 }
             }
             else -> {
@@ -59,6 +59,10 @@ class KeywordSpec(
             return (valueArgument as IrConst<String>).value
         }
         return null
+    }
+
+    private fun flags(text: String): String? {
+        return if ('{' in text) return "java-format" else null
     }
 }
 

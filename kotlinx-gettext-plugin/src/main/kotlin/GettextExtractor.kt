@@ -29,15 +29,15 @@ class GettextExtractor(
     private val relativePath: String,
     private var fileEntry: IrFileEntry,
 ) : IrElementTransformerVoid() {
-    private val myMsgIds: MutableList<MsgId> = mutableListOf()
-    val msgIds: List<MsgId> get() = myMsgIds
+    private val myPoEntries: MutableList<PoEntry> = mutableListOf()
+    val poEntries: List<PoEntry> get() = myPoEntries
 
     override fun visitCall(expression: IrCall): IrExpression {
         super.visitCall(expression)
 
         val info = keywords.firstOrNull { it.matches(expression) }?.process(expression, "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}")
         if (info != null) {
-            myMsgIds.add(info)
+            myPoEntries.add(info)
             messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] ${info.references[0]} \"${info.text}\"")
         }
 

@@ -19,32 +19,17 @@ package com.github.kropp.kotlinx.gettext
 import java.io.*
 import java.nio.charset.Charset
 
-class PotFile(
-    private val messages: List<MsgId>,
+/**
+ * Gettext .po (Portable Object) & .pot (PO Template) files support
+ */
+class PoFile(
+    private val entries: List<PoEntry>,
 ) {
-    fun generate(out: OutputStream) {
+    fun write(out: OutputStream) {
         PrintStream(out, false, Charset.forName("UTF-8")).use { writer ->
             writer.generateHeader()
-            writer.generateMessages()
-        }
-    }
-
-    private fun PrintStream.generateMessages() {
-        for (message in messages) {
-            println()
-            for (reference in message.references) {
-                println("#: $reference")
-            }
-            if (message.context != null) {
-                println("msgctxt \"${message.context}\"")
-            }
-            println("msgid \"${message.text}\"")
-            if (message.plural != null) {
-                println("msgid_plural \"${message.plural}\"")
-                println("msgstr[0] \"\"")
-                println("msgstr[1] \"\"")
-            } else {
-                println("msgstr \"\"")
+            for (message in entries) {
+                message.write(writer)
             }
         }
     }
@@ -74,14 +59,14 @@ class PotFile(
     }
 
     companion object {
-        fun fromUnmerged(messages: List<MsgId>): PotFile {
+        fun fromUnmerged(messages: List<PoEntry>): PoFile {
             val merged =
                 messages
                     .groupBy { it.text }
                     .map { group ->
                         group.value.first().copy(references = group.value.flatMap { it.references })
                     }
-            return PotFile(merged)
+            return PoFile(merged)
         }
     }
 }

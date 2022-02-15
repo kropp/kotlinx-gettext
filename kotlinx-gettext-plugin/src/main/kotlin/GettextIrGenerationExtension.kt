@@ -29,7 +29,7 @@ class GettextIrGenerationExtension(
     private val potFile: File,
 ) : IrGenerationExtension {
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        val messages = mutableListOf<MsgId>()
+        val messages = mutableListOf<PoEntry>()
 
         for (file in moduleFragment.files) {
             val f = File(file.fileEntry.name)
@@ -41,11 +41,11 @@ class GettextIrGenerationExtension(
                 }
             val extractor = GettextExtractor(messageCollector, keywords.map { KeywordSpec(it) }, relativePath, file.fileEntry)
             extractor.visitFile(file)
-            messages += extractor.msgIds
+            messages += extractor.poEntries
         }
 
         potFile.outputStream().use {
-            PotFile.fromUnmerged(messages).generate(it)
+            PoFile.fromUnmerged(messages).write(it)
         }
     }
 }
