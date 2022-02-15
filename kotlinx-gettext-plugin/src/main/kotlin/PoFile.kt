@@ -35,6 +35,23 @@ class PoFile(
         }
     }
 
+    fun update(messages: List<PoEntry>): PoFile {
+        val grouped = messages.groupBy { it.text }.toMutableMap()
+        val newEntries = entries.map { entry ->
+            val updated = grouped.remove(entry.text)
+            if (updated != null) {
+                val newReferences = updated.flatMap { it.references }
+                val updatedPaths = newReferences.map { it.substringBefore(':') }
+                entry.copy(references = entry.references.filterNot { updatedPaths.any { path -> it.startsWith(path)} } + newReferences)
+            } else {
+                entry
+            }
+        } + grouped.map { group ->
+            group.value.first().copy(references = group.value.flatMap { it.references })
+        }
+        return PoFile(newEntries, header)
+    }
+
     companion object {
         @JvmStatic
         fun fromUnmerged(messages: List<PoEntry>): PoFile {
