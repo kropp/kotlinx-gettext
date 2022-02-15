@@ -35,11 +35,17 @@ class PotFile(
             for (reference in message.references) {
                 println("#: $reference")
             }
+            if (message.context != null) {
+                println("msgctxt \"${message.context}\"")
+            }
             println("msgid \"${message.text}\"")
             if (message.plural != null) {
                 println("msgid_plural \"${message.plural}\"")
+                println("msgstr[0] \"\"")
+                println("msgstr[1] \"\"")
+            } else {
+                println("msgstr \"\"")
             }
-            println("msgstr \"\"")
         }
     }
 

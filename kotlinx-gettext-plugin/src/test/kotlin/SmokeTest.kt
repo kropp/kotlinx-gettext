@@ -68,6 +68,22 @@ fun custom(text: String) {}
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
 
+    @Test
+    fun context() {
+        val result = compile(
+            SourceFile.kotlin(
+                "main.kt", """
+fun main() {
+  trc("context", "Hello, World!")
+}
+fun trc(ctx: String, text: String) {}
+"""
+            ),
+            defaultKeywords = listOf("trc:1c,2")
+        )
+        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+    }
+
     private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()

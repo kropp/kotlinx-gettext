@@ -28,7 +28,7 @@ class GettextCommandLineProcessor : CommandLineProcessor {
     companion object {
         private const val OPTION_POT_FILE = "potFile"
         private const val OPTION_BASE_DIR = "baseDir"
-        private const val OPTION_KEYWORD = "k"
+        private const val OPTION_KEYWORD = "keyword"
 
         val ARG_BASE_DIR = CompilerConfigurationKey<String>(OPTION_POT_FILE)
         val ARG_POT_FILE = CompilerConfigurationKey<String>(OPTION_BASE_DIR)
@@ -53,7 +53,7 @@ class GettextCommandLineProcessor : CommandLineProcessor {
         CliOption(
             optionName = OPTION_KEYWORD,
             valueDescription = "keyword",
-            description = "method's name to look for, in xgettext format",
+            description = "method name to look for in xgettext format",
             allowMultipleOccurrences = true,
             required = false
         )
@@ -67,7 +67,9 @@ class GettextCommandLineProcessor : CommandLineProcessor {
         return when (option.optionName) {
             OPTION_BASE_DIR -> configuration.put(ARG_BASE_DIR, value)
             OPTION_POT_FILE -> configuration.put(ARG_POT_FILE, value)
-            OPTION_KEYWORD -> configuration.add(ARG_KEYWORDS, value)
+            // ;COMMA; - magic separator used instead of comma, because comma is used by compiler
+            // see KotlinxGettextGradlePlugin.kt
+            OPTION_KEYWORD -> configuration.add(ARG_KEYWORDS, value.replace(";COMMA;", ","))
             else -> throw IllegalArgumentException("Unexpected config option ${option.optionName}")
         }
     }

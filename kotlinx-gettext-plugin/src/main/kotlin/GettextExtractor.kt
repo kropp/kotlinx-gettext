@@ -20,15 +20,12 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.IrFileEntry
 import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrConst
-import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class GettextExtractor(
     private val messageCollector: MessageCollector,
-    private val keywords: List<String>,
+    private val keywords: List<KeywordSpec>,
     private val relativePath: String,
     private var fileEntry: IrFileEntry,
 ) : IrElementTransformerVoid() {
@@ -38,16 +35,10 @@ class GettextExtractor(
     override fun visitCall(expression: IrCall): IrExpression {
         super.visitCall(expression)
 
-        val signature = expression.symbol.signature as? IdSignature.CommonSignature
-        if (signature?.shortName in keywords) {
-            val valueArgument = expression.getValueArgument(0)
-            if (valueArgument is IrConst<*> && valueArgument.kind == IrConstKind.String) {
-                val stringArgument = valueArgument as IrConst<String>
-                val reference = "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}"
-                val info = MsgId(listOf(reference), null, stringArgument.value)
-                myMsgIds.add(info)
-                messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] $reference \"${info.text}\"")
-            }
+        val info = keywords.firstOrNull { it.matches(expression) }?.process(expression, "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}")
+        if (info != null) {
+            myMsgIds.add(info)
+            messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] ${info.references[0]} \"${info.text}\"")
         }
 
         return expression

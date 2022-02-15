@@ -39,7 +39,7 @@ class GettextIrGenerationExtension(
                 } catch (_: Throwable) {
                     f.name
                 }
-            val extractor = GettextExtractor(messageCollector, keywords, relativePath, file.fileEntry)
+            val extractor = GettextExtractor(messageCollector, keywords.map { KeywordSpec(it) }, relativePath, file.fileEntry)
             extractor.visitFile(file)
             messages += extractor.msgIds
         }

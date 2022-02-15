@@ -16,9 +16,9 @@
 
 package com.github.kropp.kotlinx.gettext
 
-data class MsgId(
-    val references: List<String>,
-    val context: String?,
-    val text: String,
-    val plural: String?,
-)
+class KeywordSpecArgument(
+    val index: Int,
+    val isContext: Boolean
+) {
+    constructor(spec: String): this(spec.substringBefore('c').toInt(), spec.last() == 'c')
+}
