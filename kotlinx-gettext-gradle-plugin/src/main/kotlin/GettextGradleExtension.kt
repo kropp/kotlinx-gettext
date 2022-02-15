@@ -16,11 +16,13 @@
 
 package com.github.kropp.kotlinx.gettext.gradle
 
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 
 open class GettextGradleExtension(objects: ObjectFactory, projectLayout: ProjectLayout) {
     val potFile: RegularFileProperty = objects.fileProperty().convention(projectLayout.buildDirectory.file("gettext/i18n.pot"))
+    val baseDir: DirectoryProperty = objects.directoryProperty().convention(projectLayout.projectDirectory)
     val keywords = objects.setProperty(String::class.java).convention(setOf("tr"))
 }

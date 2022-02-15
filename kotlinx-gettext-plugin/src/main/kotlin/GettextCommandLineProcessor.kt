@@ -27,15 +27,23 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 class GettextCommandLineProcessor : CommandLineProcessor {
     companion object {
         private const val OPTION_POT_FILE = "potFile"
+        private const val OPTION_BASE_DIR = "baseDir"
         private const val OPTION_KEYWORD = "k"
 
-        val ARG_POT_FILE = CompilerConfigurationKey<String>(OPTION_POT_FILE)
+        val ARG_BASE_DIR = CompilerConfigurationKey<String>(OPTION_POT_FILE)
+        val ARG_POT_FILE = CompilerConfigurationKey<String>(OPTION_BASE_DIR)
         val ARG_KEYWORDS = CompilerConfigurationKey<List<String>>(OPTION_KEYWORD)
     }
 
     override val pluginId: String = KOTLIN_PLUGIN_ID
 
     override val pluginOptions: Collection<CliOption> = listOf(
+        CliOption(
+            optionName = OPTION_BASE_DIR,
+            valueDescription = "directory",
+            description = "base path to files",
+            required = false,
+        ),
         CliOption(
             optionName = OPTION_POT_FILE,
             valueDescription = "file",
@@ -57,6 +65,7 @@ class GettextCommandLineProcessor : CommandLineProcessor {
         configuration: CompilerConfiguration
     ) {
         return when (option.optionName) {
+            OPTION_BASE_DIR -> configuration.put(ARG_BASE_DIR, value)
             OPTION_POT_FILE -> configuration.put(ARG_POT_FILE, value)
             OPTION_KEYWORD -> configuration.add(ARG_KEYWORDS, value)
             else -> throw IllegalArgumentException("Unexpected config option ${option.optionName}")

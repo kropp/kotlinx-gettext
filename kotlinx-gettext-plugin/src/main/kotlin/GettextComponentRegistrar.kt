@@ -52,7 +52,7 @@ class GettextComponentRegistrar(
 
         val keywords = configuration.getList(GettextCommandLineProcessor.ARG_KEYWORDS).ifEmpty { defaultKeywords }
 
-        val basePath = project.basePath?.let(::File) ?: File("")
+        val basePath = configuration.get(GettextCommandLineProcessor.ARG_BASE_DIR)?.let(::File) ?: File("")
 
         IrGenerationExtension.registerExtension(project, GettextIrGenerationExtension(messageCollector, keywords, basePath, file))
     }

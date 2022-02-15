@@ -52,6 +52,7 @@ class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
         return project.provider {
             listOf(
                 SubpluginOption(key = "potFile", value = extension.potFile.get().asFile.path),
+                SubpluginOption(key = "baseDir", value = extension.baseDir.get().asFile.path),
 //                SubpluginOption(key = "keywords", value = "\"${extension.keywords.get().joinToString(";")}\""),
             )
         }
