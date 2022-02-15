@@ -45,7 +45,7 @@ class GettextIrGenerationExtension(
         }
 
         potFile.outputStream().use {
-            PotFile(messages).generate(it)
+            PotFile.fromUnmerged(messages).generate(it)
         }
     }
 }

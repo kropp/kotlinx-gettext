@@ -17,12 +17,13 @@
 package com.github.kropp.kotlinx.gettext
 
 import java.io.*
+import java.nio.charset.Charset
 
 class PotFile(
     private val messages: List<MsgId>,
 ) {
     fun generate(out: OutputStream) {
-        PrintStream(out).use { writer ->
+        PrintStream(out, false, Charset.forName("UTF-8")).use { writer ->
             writer.generateHeader()
             writer.generateMessages()
         }
@@ -33,12 +34,12 @@ class PotFile(
             println()
             for (reference in message.references) {
                 println("#: $reference")
-                println("msgid \"${message.text}\"")
-                if (message.plural != null) {
-                    println("msgid_plural \"${message.plural}\"")
-                }
-                println("msgstr \"\"")
             }
+            println("msgid \"${message.text}\"")
+            if (message.plural != null) {
+                println("msgid_plural \"${message.plural}\"")
+            }
+            println("msgstr \"\"")
         }
     }
 
@@ -64,5 +65,17 @@ class PotFile(
             "Content-Transfer-Encoding: 8bit\n"
             "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
         """.trimIndent())
+    }
+
+    companion object {
+        fun fromUnmerged(messages: List<MsgId>): PotFile {
+            val merged =
+                messages
+                    .groupBy { it.text }
+                    .map { group ->
+                        group.value.first().copy(references = group.value.flatMap { it.references })
+                    }
+            return PotFile(merged)
+        }
     }
 }

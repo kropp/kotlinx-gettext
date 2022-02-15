@@ -42,8 +42,9 @@ class GettextExtractor(
         if (signature?.shortName in keywords) {
             val valueArgument = expression.getValueArgument(0)
             if (valueArgument is IrConst<*> && valueArgument.kind == IrConstKind.String) {
+                val stringArgument = valueArgument as IrConst<String>
                 val reference = "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}"
-                val info = MsgId(listOf(reference), null, valueArgument.value.toString())
+                val info = MsgId(listOf(reference), null, stringArgument.value)
                 myMsgIds.add(info)
                 messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] $reference \"${info.text}\"")
             }
