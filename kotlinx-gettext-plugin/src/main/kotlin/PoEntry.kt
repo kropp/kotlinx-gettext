@@ -16,6 +16,7 @@
 
 package com.github.kropp.kotlinx.gettext
 
+import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
 /**
@@ -60,7 +61,6 @@ data class PoEntry(
     val cases: List<String>
 ) {
     fun write(out: PrintStream) {
-        out.println()
         for (comment in comments) {
             out.println("#  $comment")
         }
@@ -77,20 +77,34 @@ data class PoEntry(
             out.println("#| $prev")
         }
         if (context != null) {
-            out.println("msgctxt \"${context}\"")
+            out.println("msgctxt \"${context.escape()}\"")
         }
-        out.println("msgid \"${text.replace("\"", "\\\"")}\"")
+        out.println("msgid \"${text.escape()}\"")
         if (plural != null) {
-            out.println("msgid_plural \"${plural}\"")
+            out.println("msgid_plural \"${plural.escape()}\"")
             cases.forEachIndexed { idx, msg ->
-                out.println("msgstr[$idx] \"${msg.replace("\"", "\\\"")}\"")
+                out.println("msgstr[$idx] \"${msg.escape()}\"")
             }
         } else {
             if (cases.isEmpty()) {
                 out.println("msgstr \"\"")
             } else {
-                out.println("msgstr \"${cases[0]}\"")
+                out.println("msgstr \"${cases[0].escape()}\"")
             }
+        }
+    }
+
+    private fun String.escape(): String {
+        if (length <= 2) return this
+        // replace " with \" when in the middle of a string
+        return substring(0, this.lastIndex).replace(quoteRegex) { println(it.groupValues[1]); it.groupValues[1] + "\\\"" + it.groupValues[2] } + last()
+    }
+    private val quoteRegex = Regex("([^\n])\"(.)")
+
+    override fun toString(): String {
+        return ByteArrayOutputStream().use {
+            PrintStream(it, false, Charsets.UTF_8).use { printer -> write(printer) }
+            it.toString()
         }
     }
 }
