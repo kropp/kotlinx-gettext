@@ -24,10 +24,22 @@ internal class PluralRuleParser(private val rule: String) {
      */
     fun parse(): PluralRuleExpression {
         return try {
-            parseBinaryExpression() ?: EmptyRule
+            parseExpression() ?: EmptyRule
         } catch (_: Throwable) {
             EmptyRule
         }
+    }
+
+    private fun parseExpression(): PluralRuleExpression? {
+        if (offset < rule.length && rule[offset] == '(') {
+            offset++
+            val expression = parseExpression()
+            return if (offset < rule.length && rule[offset] == ')') {
+                offset++
+                expression
+            } else null
+        }
+        return parseBinaryExpression()
     }
 
     private fun parseWhitespace() {
@@ -44,6 +56,8 @@ internal class PluralRuleParser(private val rule: String) {
         return when (rule[offset]) {
             '!' -> { offset += 2; BinaryOp.NotEquals }
             '=' -> { offset += 2; BinaryOp.Equals }
+            '&' -> { offset += 2; BinaryOp.And }
+            '|' -> { offset += 2; BinaryOp.Or }
             '<' -> {
                 offset++
                 if (offset < rule.length && rule[offset] == '=') {

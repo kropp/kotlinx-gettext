@@ -95,4 +95,72 @@ class ParserTest {
         assertEquals(0, rule.evaluate(100))
         assertEquals(9, rule.evaluate(129))
     }
+
+    @Test
+    fun bracesNotZero() {
+        val rule = PluralRule("(n != 0)")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+        assertEquals(1, rule.evaluate(2))
+        assertEquals(1, rule.evaluate(10))
+        assertEquals(1, rule.evaluate(100))
+    }
+
+    @Test
+    fun bracesGtZero() {
+        val rule = PluralRule("(n > 0)")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+        assertEquals(1, rule.evaluate(2))
+        assertEquals(1, rule.evaluate(10))
+        assertEquals(1, rule.evaluate(100))
+    }
+
+    @Test
+    fun bracesReminder() {
+        val rule = PluralRule("(n % 10)")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+        assertEquals(2, rule.evaluate(2))
+        assertEquals(0, rule.evaluate(10))
+        assertEquals(3, rule.evaluate(13))
+        assertEquals(7, rule.evaluate(17))
+        assertEquals(0, rule.evaluate(100))
+        assertEquals(9, rule.evaluate(129))
+    }
+
+    @Test
+    fun andFalse() {
+        val rule = PluralRule("n && 0")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(0, rule.evaluate(1))
+    }
+
+    @Test
+    fun andTrue() {
+        val rule = PluralRule("n && 1")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+    }
+
+    @Test
+    fun orFalse() {
+        val rule = PluralRule("n || 0")
+
+        assertEquals(0, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+    }
+
+    @Test
+    fun orTrue() {
+        val rule = PluralRule("n || 1")
+
+        assertEquals(1, rule.evaluate(0))
+        assertEquals(1, rule.evaluate(1))
+    }
 }

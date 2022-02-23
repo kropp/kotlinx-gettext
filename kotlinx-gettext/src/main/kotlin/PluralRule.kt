@@ -52,6 +52,8 @@ class PluralRuleBinaryExpression(
             BinaryOp.Greater -> if (left.evaluate(n) > right) 1 else 0
             BinaryOp.GreaterOrEquals -> if (left.evaluate(n) >= right) 1 else 0
             BinaryOp.Reminder -> left.evaluate(n) % right
+            BinaryOp.And -> if ((left.evaluate(n) > 0) && (right > 0)) 1 else 0
+            BinaryOp.Or -> if ((left.evaluate(n) > 0) || (right > 0)) 1 else 0
         }
     }
 }
@@ -63,5 +65,7 @@ enum class BinaryOp {
     LessOrEquals,
     Greater,
     GreaterOrEquals,
-    Reminder
+    Reminder,
+    And,
+    Or,
 }
