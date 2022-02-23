@@ -19,11 +19,49 @@ package com.github.kropp.kotlinx.gettext
 /**
  * Parsed plural rule expression from PO file
  */
-class PluralRule {
-    /**
-     * Evaluate the rule for the given [n]
-     */
-    fun evaluate(n: Int): Int {
-        return 0
+class PluralRule(rule: String) : PluralRuleExpression {
+    private val parsedRule = PluralRuleParser(rule).parse()
+
+    override fun evaluate(n: Int): Int {
+        return parsedRule.evaluate(n)
     }
+}
+
+object EmptyRule : PluralRuleExpression {
+    override fun evaluate(n: Int): Int = 0
+}
+
+/**
+ * The `n` literal as used in plural rule
+ */
+object PluralRuleN : PluralRuleExpression {
+    override fun evaluate(n: Int): Int = n
+}
+
+class PluralRuleBinaryExpression(
+    private val left: PluralRuleExpression,
+    private val op: BinaryOp,
+    private val right: Int
+) : PluralRuleExpression {
+    override fun evaluate(n: Int): Int {
+        return when(op) {
+            BinaryOp.NotEquals -> if (left.evaluate(n) != right) 1 else 0
+            BinaryOp.Equals -> if (left.evaluate(n) == right) 1 else 0
+            BinaryOp.Less -> if (left.evaluate(n) < right) 1 else 0
+            BinaryOp.LessOrEquals -> if (left.evaluate(n) <= right) 1 else 0
+            BinaryOp.Greater -> if (left.evaluate(n) > right) 1 else 0
+            BinaryOp.GreaterOrEquals -> if (left.evaluate(n) >= right) 1 else 0
+            BinaryOp.Reminder -> left.evaluate(n) % right
+        }
+    }
+}
+
+enum class BinaryOp {
+    NotEquals,
+    Equals,
+    Less,
+    LessOrEquals,
+    Greater,
+    GreaterOrEquals,
+    Reminder
 }
