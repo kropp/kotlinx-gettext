@@ -16,151 +16,99 @@
 
 package com.github.kropp.kotlinx.gettext
 
+import com.github.kropp.kotlinx.gettext.BinaryOp.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class ParserTest {
     @Test
     fun zero() {
-        val rule = PluralRule("0")
-
-        assertEquals(0, rule.evaluate(0))
+        assertEquals(Number(0), PluralRule("0"))
     }
 
     @Test
     fun notZero() {
-        val rule = PluralRule("n != 0")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(1, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, NotEquals, Number(0)), PluralRule("n != 0"))
     }
 
     @Test
     fun gtZero() {
-        val rule = PluralRule("n > 0")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(1, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, Greater, Number(0)), PluralRule("n > 0"))
     }
 
     @Test
     fun gteZero() {
-        val rule = PluralRule("n >= 0")
-
-        assertEquals(1, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(1, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, GreaterOrEquals, Number(0)), PluralRule("n >= 0"))
     }
 
     @Test
     fun ltTen() {
-        val rule = PluralRule("n < 10")
-
-        assertEquals(1, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(0, rule.evaluate(10))
-        assertEquals(0, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, Less, Number(10)), PluralRule("n < 10"))
     }
 
     @Test
     fun leTen() {
-        val rule = PluralRule("n <= 10")
-
-        assertEquals(1, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(0, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, LessOrEquals, Number(10)), PluralRule("n <= 10"))
     }
 
     @Test
     fun reminder() {
-        val rule = PluralRule("n % 10")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(2, rule.evaluate(2))
-        assertEquals(0, rule.evaluate(10))
-        assertEquals(3, rule.evaluate(13))
-        assertEquals(7, rule.evaluate(17))
-        assertEquals(0, rule.evaluate(100))
-        assertEquals(9, rule.evaluate(129))
+        assertEquals(BinaryExpression(N, Remainder, Number(10)), PluralRule("n % 10"))
     }
 
     @Test
     fun bracesNotZero() {
-        val rule = PluralRule("(n != 0)")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(1, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, NotEquals, Number(0)), PluralRule("(n != 0)"))
     }
 
     @Test
     fun bracesGtZero() {
-        val rule = PluralRule("(n > 0)")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(1, rule.evaluate(2))
-        assertEquals(1, rule.evaluate(10))
-        assertEquals(1, rule.evaluate(100))
+        assertEquals(BinaryExpression(N, Greater, Number(0)), PluralRule("(n > 0)"))
     }
 
     @Test
     fun bracesReminder() {
-        val rule = PluralRule("(n % 10)")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
-        assertEquals(2, rule.evaluate(2))
-        assertEquals(0, rule.evaluate(10))
-        assertEquals(3, rule.evaluate(13))
-        assertEquals(7, rule.evaluate(17))
-        assertEquals(0, rule.evaluate(100))
-        assertEquals(9, rule.evaluate(129))
+        assertEquals(BinaryExpression(N, Remainder, Number(10)), PluralRule("(n % 10)"))
     }
 
     @Test
     fun andFalse() {
-        val rule = PluralRule("n && 0")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(0, rule.evaluate(1))
+        assertEquals(BinaryExpression(N, And, Number(0)), PluralRule("n && 0"))
     }
 
     @Test
     fun andTrue() {
-        val rule = PluralRule("n && 1")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
+        assertEquals(BinaryExpression(N, And, Number(1)), PluralRule("n && 1"))
     }
 
     @Test
     fun orFalse() {
-        val rule = PluralRule("n || 0")
-
-        assertEquals(0, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
+        assertEquals(BinaryExpression(N, Or, Number(0)), PluralRule("n || 0"))
     }
 
     @Test
     fun orTrue() {
-        val rule = PluralRule("n || 1")
+        assertEquals(BinaryExpression(N, Or, Number(1)), PluralRule("n || 1"))
+    }
 
-        assertEquals(1, rule.evaluate(0))
-        assertEquals(1, rule.evaluate(1))
+    @Test
+    fun ternary() {
+        assertEquals(TernaryExpression(N, Number(123), Number(321)), PluralRule("n ? 123 : 321"))
+    }
+
+    @Test
+    fun ternaryOrCondition() {
+        assertEquals(TernaryExpression(
+            BinaryExpression(
+                BinaryExpression(N, Equals, Number(1)),
+                Or,
+                BinaryExpression(
+                    BinaryExpression(N, Remainder, Number(10)),
+                    Equals,
+                    Number(1)
+                ),
+            ),
+            Number(0), Number(1)
+        ), PluralRule("(n==1 || n%10==1) ? 0 : 1"))
     }
 }

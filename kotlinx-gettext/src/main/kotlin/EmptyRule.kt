@@ -17,8 +17,8 @@
 package com.github.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * Fallback rule, which always evaluates to zero
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
-
+object EmptyRule : PluralRuleExpression {
+    override fun evaluate(n: Int): Int = 0
+}

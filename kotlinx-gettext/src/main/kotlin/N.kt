@@ -17,8 +17,8 @@
 package com.github.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * An `n` literal as used in plural rule
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
-
+object N : PluralRuleExpression, PluralRuleToken {
+    override fun evaluate(n: Int): Int = n
+}

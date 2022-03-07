@@ -17,8 +17,11 @@
 package com.github.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * A token in plural rule, such as number, logical or comparison operation, or parenthesis
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
-
+interface PluralRuleToken {
+    object LeftParen : PluralRuleToken
+    object RightParen : PluralRuleToken
+    object QuestionMark : PluralRuleToken
+    object Colon : PluralRuleToken
+}

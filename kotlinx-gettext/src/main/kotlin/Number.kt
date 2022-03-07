@@ -17,8 +17,23 @@
 package com.github.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * An integer number
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
+class Number(private val number: Int): PluralRuleExpression, PluralRuleToken {
+    override fun evaluate(n: Int): Int = number
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Number
+
+        if (number != other.number) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return number
+    }
+}

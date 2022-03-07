@@ -17,8 +17,21 @@
 package com.github.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * Binary operators supported in plural rules.
+ *
+ * Ordered by priority
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
+enum class BinaryOp : PluralRuleToken {
+    Or,
 
+    And,
+
+    NotEquals,
+    Equals,
+    Less,
+    LessOrEquals,
+    Greater,
+    GreaterOrEquals,
+
+    Remainder,
+}

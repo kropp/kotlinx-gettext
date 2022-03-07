@@ -16,98 +16,150 @@
 
 package com.github.kropp.kotlinx.gettext
 
-internal class PluralRuleParser(private val rule: String) {
-    private var offset: Int = 0
+import com.github.kropp.kotlinx.gettext.BinaryOp.*
+import com.github.kropp.kotlinx.gettext.PluralRuleToken.*
 
+internal class PluralRuleParser(private val rule: String) {
     /**
      * Parse plural rule as defined in PO file
      */
     fun parse(): PluralRuleExpression {
         return try {
-            parseExpression() ?: EmptyRule
-        } catch (_: Throwable) {
+            // a plural rule is an expression, see grammar below
+            parseExpression(lexer()) ?: EmptyRule
+        } catch (t: Throwable) {
+            t.printStackTrace()
             EmptyRule
         }
     }
 
-    private fun parseExpression(): PluralRuleExpression? {
-        if (offset < rule.length && rule[offset] == '(') {
-            offset++
-            val expression = parseExpression()
-            return if (offset < rule.length && rule[offset] == ')') {
+    /**
+     * Tokenize input string, skipping all whitespace
+     */
+    fun lexer(): List<PluralRuleToken> = buildList {
+        var offset = 0
+        while (offset < rule.length) {
+            if (rule[offset].isWhitespace()) {
                 offset++
-                expression
-            } else null
-        }
-        return parseBinaryExpression()
-    }
-
-    private fun parseWhitespace() {
-        while (rule[offset].isWhitespace()) {
-            if (offset == rule.length - 1) {
-                return
-            }
-            offset++
-        }
-    }
-
-    private fun parseBinaryOperation(): BinaryOp? {
-        if (offset >= rule.length) return null
-        return when (rule[offset]) {
-            '!' -> { offset += 2; BinaryOp.NotEquals }
-            '=' -> { offset += 2; BinaryOp.Equals }
-            '&' -> { offset += 2; BinaryOp.And }
-            '|' -> { offset += 2; BinaryOp.Or }
-            '<' -> {
-                offset++
-                if (offset < rule.length && rule[offset] == '=') {
-                    offset++
-                    BinaryOp.LessOrEquals
-                } else {
-                    BinaryOp.Less
+            } else {
+                when(rule[offset]) {
+                    'n' -> { add(N); offset++ }
+                    '(' -> { add(LeftParen); offset++ }
+                    ')' -> { add(RightParen); offset++ }
+                    '?' -> { add(QuestionMark); offset++ }
+                    ':' -> { add(Colon); offset++ }
+                    '!' -> { add(NotEquals); offset += 2 }
+                    '=' -> { add(Equals); offset += 2 }
+                    '&' -> { add(And); offset += 2 }
+                    '|' -> { add(Or); offset += 2 }
+                    '<' -> {
+                        offset++
+                        if (offset < rule.length && rule[offset] == '=') {
+                            offset++
+                            add(LessOrEquals)
+                        } else {
+                            add(Less)
+                        }
+                    }
+                    '>' -> {
+                        offset++
+                        if (offset < rule.length && rule[offset] == '=') {
+                            offset++
+                            add(GreaterOrEquals)
+                        } else {
+                            add(Greater)
+                        }
+                    }
+                    '%' -> { add(Remainder); offset++ }
+                    else -> {
+                        var end = offset
+                        var result = 0
+                        while (end < rule.length && rule[end].isDigit()) {
+                            result = result * 10 + rule[end].digitToInt()
+                            end++
+                        }
+                        if (end != offset) {
+                            offset = end
+                            add(Number(result))
+                        }
+                    }
                 }
             }
-            '>' -> {
-                offset++
-                if (offset < rule.length && rule[offset] == '=') {
-                    offset++
-                    BinaryOp.GreaterOrEquals
-                } else {
-                    BinaryOp.Greater
+        }
+    }
+
+    /**
+     * Plural rule grammar
+     * Expression = ( Expression ) |
+     *              TernaryExpression |
+     *              BinaryExpression |
+     *              n |
+     *              <number>
+     * BinaryExpression = Expression op Expression
+     *   where op is [BinaryOp] in the listed priority
+     */
+    private fun parseExpression(tokens: List<PluralRuleToken>): PluralRuleExpression? {
+        val first = tokens.firstOrNull()
+        if (first == LeftParen && tokens.last() == RightParen) {
+            return parseExpression(tokens.subList(1, tokens.size - 1))
+        }
+        val ternary = parseTernaryExpression(tokens)
+        if (ternary != null) {
+            return ternary
+        }
+        if (tokens.size > 2) {
+            for (op in BinaryOp.values()) {
+                val parsed = parseBinaryExpression(tokens, op)
+                if (parsed != null) {
+                    return parsed
                 }
             }
-            '%' -> { offset++; BinaryOp.Reminder }
-            else -> null
         }
+        if (first is N) {
+            return first
+        }
+        if (first is Number) {
+            return first
+        }
+        return null
     }
 
-    private fun parseBinaryExpression(): PluralRuleExpression? {
-        val n = parseN() ?: return null
-        parseWhitespace()
-        val op = parseBinaryOperation() ?: return null
-        parseWhitespace()
-        val number = parseNumber() ?: return null
-        return PluralRuleBinaryExpression(n, op, number)
+    private fun parseTernaryExpression(tokens: List<PluralRuleToken>): TernaryExpression? {
+        var level = 0
+        val questionMark = tokens.indices.firstOrNull {
+            val token = tokens[it]
+            if (token == LeftParen) level++
+            if (token == RightParen) level--
+            token == QuestionMark && level == 0
+        } ?: return null
+
+        val condition = parseExpression(tokens.subList(0, questionMark)) ?: return null
+
+        level = 0
+        val colon = (questionMark+1 until tokens.size).firstOrNull {
+            val token = tokens[it]
+            if (token == LeftParen) level++
+            if (token == RightParen) level--
+            token == Colon && level == 0
+        } ?: return null
+
+        val left = parseExpression(tokens.subList(questionMark + 1, colon)) ?: return null
+        val right = parseExpression(tokens.subList(colon + 1, tokens.size)) ?: return null
+
+        return TernaryExpression(condition, left, right)
     }
 
-    private fun parseN(): PluralRuleN? {
-        return if (rule[offset] == 'n') {
-            offset++
-            PluralRuleN
-        } else null
-    }
+    private fun parseBinaryExpression(tokens: List<PluralRuleToken>, operator: BinaryOp): BinaryExpression? {
+        for (i in tokens.indices) {
+            val token = tokens[i]
+            if (token != operator) continue
 
-    private fun parseNumber(): Int? {
-        var end = offset
-        var result = 0
-        while (end < rule.length && rule[end].isDigit()) {
-            result = result * 10 + rule[end].digitToInt()
-            end++
+            val left = parseExpression(tokens.subList(0, i)) ?: continue
+            val right = parseExpression(tokens.subList(i + 1, tokens.size)) ?: continue
+
+            return BinaryExpression(left, operator, right)
         }
-        if (end == offset) {
-            return null
-        }
-        offset = end
-        return result
+
+        return null
     }
 }
