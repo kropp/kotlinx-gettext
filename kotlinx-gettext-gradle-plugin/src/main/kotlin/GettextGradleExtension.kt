@@ -22,6 +22,7 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 
 open class GettextGradleExtension(objects: ObjectFactory, projectLayout: ProjectLayout) {
+    val enabled = objects.property(Boolean::class.java).convention(false)
     val baseDir: DirectoryProperty = objects.directoryProperty().convention(projectLayout.projectDirectory)
     val potFile: RegularFileProperty = objects.fileProperty().convention(projectLayout.buildDirectory.file("gettext/i18n.pot"))
     val overwrite = objects.property(Boolean::class.java).convention(false)

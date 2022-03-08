@@ -18,6 +18,7 @@ package com.github.kropp.kotlinx.gettext.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
@@ -26,15 +27,23 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 const val KOTLIN_PLUGIN_ID = "com.github.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_GROUP = "com.github.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_NAME = "kotlinx-gettext-plugin"
-const val KOTLIN_PLUGIN_VERSION = "1.0-SNAPSHOT"
+const val KOTLIN_PLUGIN_VERSION = "0.1"
 
 @Suppress("unused")
 class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
-    override fun apply(target: Project): Unit = with(target) {
-        extensions.create("gettext", GettextGradleExtension::class.java)
+    override fun apply(target: Project) {
+        val extension = target.extensions.create("gettext", GettextGradleExtension::class.java)
+        target.tasks.register("gettext") {
+            it.dependsOn(target.tasks.withType(KotlinCompile::class.java))
+        }
+        if ("gettext" in target.gradle.startParameter.taskNames) {
+            extension.enabled.set(true)
+        }
     }
 
-    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
+    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean {
+        return kotlinCompilation.target.project.extensions.getByType(GettextGradleExtension::class.java).enabled.get()
+    }
 
     override fun getCompilerPluginId(): String = KOTLIN_PLUGIN_ID
 
