@@ -1,0 +1,10 @@
+msgid ""
+msgstr ""
+
+msgctxt "feminine"
+msgid "Installed"
+msgstr "Установлена"
+
+msgctxt "masculine"
+msgid "Installed"
+msgstr "Установлен"

@@ -37,10 +37,14 @@ class PoData(
 
     companion object {
         @JvmStatic
+        val CONTEXT_DELIMITER = '\u0004'
+
+        @JvmStatic
         fun read(input: InputStream): PoData {
             val entries = mutableMapOf<String, PoEntry>()
             var pluralRule = ""
 
+            var context: String? = null
             var id: String? = null
             var str = ""
             var plural: String? = null
@@ -50,16 +54,14 @@ class PoData(
                 lines.forEach { line ->
                     when {
                         line.isBlank() -> {
-                            id?.let {
-                                if (it.isNotEmpty()) {
-                                    entries[it] = PoEntry(str, plural, cases.toTypedArray())
-                                }
-                            }
+                            entry(entries, context, id, str, plural, cases)
+                            context = null
                             id = null
                             str = ""
                             plural = null
                             cases = mutableListOf()
                         }
+                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctxt ").trim('"')
                         line.startsWith("msgid ") -> id = line.substringAfter("msgid ").trim('"')
                         line.startsWith("msgid_plural ") -> plural = line.substringAfter("msgid_plural ").trim('"')
                         line.startsWith("msgstr ") -> str = line.substringAfter("msgstr ").trim('"')
@@ -75,19 +77,25 @@ class PoData(
                         }
                     }
                 }
-                id?.let {
-                    if (it.isNotEmpty()) {
-                        entries[it] = PoEntry(str, plural, cases.toTypedArray())
-                    }
-                }
+                entry(entries, context, id, str, plural, cases)
             }
             return PoData(entries, PluralRule(pluralRule))
         }
-    }
 
-    class PoEntry(
-        val str: String,
-        val plural: String?,
-        val cases: Array<String>
-    )
+        @JvmStatic
+        private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String>) {
+            if (!id.isNullOrEmpty()) {
+                entries[if (context != null) "$context$CONTEXT_DELIMITER$id" else id] = PoEntry(str, plural, cases.toTypedArray())
+            }
+        }
+    }
 }
+
+/**
+ * Data for a single PO file entry.
+ */
+class PoEntry(
+    val str: String,
+    val plural: String?,
+    val cases: Array<String>
+)

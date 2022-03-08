@@ -73,7 +73,7 @@ class I18n private constructor(
      * Translate [text] in a given [context].
      */
     fun trc(context: String, text: String): String {
-        return text
+        return poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
     }
 
     companion object {
