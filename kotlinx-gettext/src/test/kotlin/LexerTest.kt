@@ -20,6 +20,7 @@ import com.github.kropp.kotlinx.gettext.BinaryOp.*
 import com.github.kropp.kotlinx.gettext.PluralRuleToken.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 class LexerTest {
     @Test
@@ -114,5 +115,29 @@ class LexerTest {
             RightParen,
             QuestionMark, Number(0), Colon, Number(1)
         ), rule.lexer())
+    }
+
+    @Test
+    fun parens() {
+        val rule = PluralRuleParser("((n%10==1) ? 0 : (1))")
+
+        assertContentEquals(listOf(
+            LeftParen,
+            LeftParen, N, Remainder, Number(10), Equals, Number(1), RightParen,
+            QuestionMark, Number(0), Colon, LeftParen, Number(1), RightParen,
+            RightParen
+        ), rule.lexer())
+    }
+
+    @Test
+    fun ru() {
+        val rule = PluralRuleParser("((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3))")
+
+        val tokens = rule.lexer()
+
+        assertEquals(91, tokens.size, "tokenized sequence size differs")
+        assertEquals(LeftParen, tokens[0])
+        assertEquals(QuestionMark, tokens[14])
+        assertEquals(RightParen, tokens[90])
     }
 }

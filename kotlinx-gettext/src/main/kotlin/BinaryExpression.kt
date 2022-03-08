@@ -58,4 +58,8 @@ class BinaryExpression(
         result = 31 * result + right.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "$left $op $right"
+    }
 }

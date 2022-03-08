@@ -100,25 +100,31 @@ internal class PluralRuleParser(private val rule: String) {
      */
     private fun parseExpression(tokens: List<PluralRuleToken>): PluralRuleExpression? {
         val first = tokens.firstOrNull()
-        if (first == LeftParen && tokens.last() == RightParen) {
-            return parseExpression(tokens.subList(1, tokens.size - 1))
-        }
         val ternary = parseTernaryExpression(tokens)
         if (ternary != null) {
             return ternary
         }
+        if (first == LeftParen && tokens.last() == RightParen) {
+            val braced = parseExpression(tokens.subList(1, tokens.size - 1))
+            if (braced != null) return braced
+        }
         if (tokens.size > 2) {
-            for (op in BinaryOp.values()) {
-                val parsed = parseBinaryExpression(tokens, op)
+            for (ops in arrayOf(
+                arrayOf(Or),
+                arrayOf(And),
+                arrayOf(NotEquals, Equals, Less, LessOrEquals, Greater, GreaterOrEquals),
+                arrayOf(Remainder),
+            )) {
+                val parsed = parseBinaryExpression(tokens, *ops)
                 if (parsed != null) {
                     return parsed
                 }
             }
         }
-        if (first is N) {
+        if (first is N && tokens.size == 1) {
             return first
         }
-        if (first is Number) {
+        if (first is Number && tokens.size == 1) {
             return first
         }
         return null
@@ -149,15 +155,15 @@ internal class PluralRuleParser(private val rule: String) {
         return TernaryExpression(condition, left, right)
     }
 
-    private fun parseBinaryExpression(tokens: List<PluralRuleToken>, operator: BinaryOp): BinaryExpression? {
+    private fun parseBinaryExpression(tokens: List<PluralRuleToken>, vararg operators: BinaryOp): BinaryExpression? {
         for (i in tokens.indices) {
             val token = tokens[i]
-            if (token != operator) continue
+            if (token !is BinaryOp || token !in operators) continue
 
             val left = parseExpression(tokens.subList(0, i)) ?: continue
             val right = parseExpression(tokens.subList(i + 1, tokens.size)) ?: continue
 
-            return BinaryExpression(left, operator, right)
+            return BinaryExpression(left, token, right)
         }
 
         return null

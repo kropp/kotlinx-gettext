@@ -36,4 +36,6 @@ class Number(private val number: Int): PluralRuleExpression, PluralRuleToken {
     override fun hashCode(): Int {
         return number
     }
+
+    override fun toString(): String = number.toString()
 }

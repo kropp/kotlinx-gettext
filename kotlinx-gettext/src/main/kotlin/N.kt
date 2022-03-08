@@ -21,4 +21,5 @@ package com.github.kropp.kotlinx.gettext
  */
 object N : PluralRuleExpression, PluralRuleToken {
     override fun evaluate(n: Int): Int = n
+    override fun toString(): String = "n"
 }

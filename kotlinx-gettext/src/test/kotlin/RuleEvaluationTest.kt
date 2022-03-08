@@ -184,4 +184,11 @@ class RuleEvaluationTest {
         assertEquals(0, rule.evaluate(31))
         assertEquals(1, rule.evaluate(32))
     }
+
+    @Test
+    fun parens() {
+        val rule = PluralRule("((n%10==1) ? 0 : (1))")
+
+        assertEquals(0, rule.evaluate(1))
+    }
 }
