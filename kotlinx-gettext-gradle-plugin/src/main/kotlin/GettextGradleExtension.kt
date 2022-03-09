@@ -22,9 +22,34 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 
 open class GettextGradleExtension(objects: ObjectFactory, projectLayout: ProjectLayout) {
+    /**
+     * Allows enabling and disabling Gettext Kotlin compiler extension.
+     * It is **off** by default.
+     */
     val enabled = objects.property(Boolean::class.java).convention(false)
+
+    /**
+     * Base directory for reference paths in generated .pot file.
+     * Doesn't affect the files to process.
+     * Default is project directory.
+     */
     val baseDir: DirectoryProperty = objects.directoryProperty().convention(projectLayout.projectDirectory)
+
+    /**
+     * Path to generated .pot file.
+     * Default is `build/gettext/i18n.pot`
+     */
     val potFile: RegularFileProperty = objects.fileProperty().convention(projectLayout.buildDirectory.file("gettext/i18n.pot"))
+
+    /**
+     * Forces overwriting the .pot file. When disabled, it tries to merge .pot with existing entries.
+     * It is **off** by default.
+     */
     val overwrite = objects.property(Boolean::class.java).convention(false)
+
+    /**
+     * Method names to search for. Uses gettext keywords format.
+     * Default is `tr`.
+     */
     val keywords = objects.listProperty(String::class.java).convention(listOf("tr"))
 }
