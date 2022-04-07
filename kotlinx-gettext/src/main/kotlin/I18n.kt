@@ -76,6 +76,42 @@ class I18n private constructor(
         return poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
     }
 
+    /**
+     * Translate [MessageFormat]-compatible formatted [text] with provided [args] in a given [context].
+     */
+    fun trc(context: String, text: String, vararg args: Any?): String {
+        val str = poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
+        return MessageFormat.format(str, *args)
+    }
+
+    /**
+     * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
+     */
+    fun trnc(context: String, text: String, plural: String, n: Int): String {
+        return poData["$context${PoData.CONTEXT_DELIMITER}$text", n] ?: if (n == 1) text else plural
+    }
+
+    /**
+     * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
+     */
+    fun trnc(context: String, text: String, plural: String, n: Long): String = trnc(context, text, plural, n.toInt())
+
+    /**
+     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * with provided [args], chosen based on provided number [n] in a given [context].
+     */
+    fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String {
+        val str = poData["$context${PoData.CONTEXT_DELIMITER}$text", n] ?: if (n == 1) text else plural
+        return MessageFormat.format(str, *args)
+    }
+
+    /**
+     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * with provided [args], chosen based on provided number [n] in a given [context].
+     */
+    fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String =
+        trnc(context, text, plural, n.toInt(), *args)
+
     companion object {
         /**
          * Load translations for given [locale] from given input stream.
