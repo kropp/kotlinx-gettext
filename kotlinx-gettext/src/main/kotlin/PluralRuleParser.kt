@@ -28,7 +28,6 @@ internal class PluralRuleParser(private val rule: String) {
             // a plural rule is an expression, see grammar below
             parseExpression(lexer()) ?: EmptyRule
         } catch (t: Throwable) {
-            t.printStackTrace()
             EmptyRule
         }
     }

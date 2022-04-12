@@ -18,14 +18,26 @@ package com.github.kropp.kotlinx.gettext
 
 import java.io.InputStream
 
+/**
+ * Low-level representation of PO file.
+ * Clients should use [I18n] instead.
+ */
 class PoData(
     private val strings: Map<String, PoEntry>,
     private val pluralRule: PluralRuleExpression
 ) {
+    /**
+     * Get translation string for the key [id].
+     * Note: When context is needed, the key is prefixed with it and [CONTEXT_DELIMITER].
+     */
     operator fun get(id: String): String? {
         return strings[id]?.str
     }
 
+    /**
+     * Get plural translation for the key [id]. The plural form is evaluated against the number [n].
+     * Note: When context is needed, the key is prefixed with it and [CONTEXT_DELIMITER].
+     */
     operator fun get(id: String, n: Int): String? {
         val entry = strings[id] ?: return null
         val case = pluralRule.evaluate(n)
@@ -36,9 +48,15 @@ class PoData(
     }
 
     companion object {
+        /**
+         * Context and key separator.
+         */
         @JvmStatic
         val CONTEXT_DELIMITER = '\u0004'
 
+        /**
+         * Loads PO file from provided [input].
+         */
         @JvmStatic
         fun read(input: InputStream): PoData {
             val entries = mutableMapOf<String, PoEntry>()
@@ -91,11 +109,3 @@ class PoData(
     }
 }
 
-/**
- * Data for a single PO file entry.
- */
-class PoEntry(
-    val str: String,
-    val plural: String?,
-    val cases: Array<String>
-)
