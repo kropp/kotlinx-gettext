@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 /**
  * Fallback rule, which always evaluates to zero

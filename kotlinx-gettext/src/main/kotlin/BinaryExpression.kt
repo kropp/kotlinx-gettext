@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 /**
  * Any binary expression used in plural rule

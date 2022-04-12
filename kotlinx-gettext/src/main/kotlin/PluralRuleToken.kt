@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 /**
  * A token in plural rule, such as number, logical or comparison operation, or parenthesis

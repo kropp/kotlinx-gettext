@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector

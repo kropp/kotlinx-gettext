@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext.gradle
+package name.kropp.kotlinx.gettext.gradle
 
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout

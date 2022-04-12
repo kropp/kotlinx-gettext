@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 import com.google.auto.service.AutoService
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import java.io.File
 
-const val KOTLIN_PLUGIN_ID = "com.github.kropp.kotlinx-gettext"
+const val KOTLIN_PLUGIN_ID = "name.kropp.kotlinx-gettext"
 
 @AutoService(ComponentRegistrar::class)
 class GettextComponentRegistrar(

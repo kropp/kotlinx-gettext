@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
 import com.github.kropp.kotlinx.gettext.BinaryOp.*
 import org.junit.jupiter.api.Test

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext
+package name.kropp.kotlinx.gettext
 
-import com.github.kropp.kotlinx.gettext.BinaryOp.*
-import com.github.kropp.kotlinx.gettext.PluralRuleToken.*
+import name.kropp.kotlinx.gettext.BinaryOp.*
+import name.kropp.kotlinx.gettext.PluralRuleToken.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

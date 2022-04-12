@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.kropp.kotlinx.gettext.gradle
+package name.kropp.kotlinx.gettext.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -24,8 +24,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
-const val KOTLIN_PLUGIN_ID = "com.github.kropp.kotlinx-gettext"
-const val KOTLIN_PLUGIN_GROUP = "com.github.kropp.kotlinx-gettext"
+const val KOTLIN_PLUGIN_ID = "name.kropp.kotlinx-gettext"
+const val KOTLIN_PLUGIN_GROUP = "name.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_NAME = "kotlinx-gettext-plugin"
 const val KOTLIN_PLUGIN_VERSION = "0.1"
 

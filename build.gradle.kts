@@ -4,8 +4,8 @@ plugins {
 }
 
 allprojects {
-    group = "com.github.kropp.kotlinx-gettext"
-    version = "0.1.1"
+    group = "name.kropp.kotlinx-gettext"
+    version = "0.2"
 
     repositories {
         mavenCentral()

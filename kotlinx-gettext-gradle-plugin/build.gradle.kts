@@ -15,8 +15,8 @@ dependencies {
 gradlePlugin {
     plugins {
         create("kotlinx-gettext") {
-            id = "com.github.kropp.kotlinx-gettext"
-            implementationClass = "com.github.kropp.kotlinx.gettext.gradle.KotlinxGettextGradlePlugin"
+            id = "name.kropp.kotlinx-gettext"
+            implementationClass = "name.kropp.kotlinx.gettext.gradle.KotlinxGettextGradlePlugin"
         }
     }
 }
