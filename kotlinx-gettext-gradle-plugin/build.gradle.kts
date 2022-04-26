@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("java-gradle-plugin")
     kotlin("jvm")
-    `maven-publish`
+    id("com.gradle.plugin-publish") version "1.0.0-rc-1"
 }
 
 dependencies {
@@ -16,6 +16,7 @@ gradlePlugin {
     plugins {
         create("kotlinx-gettext") {
             id = "name.kropp.kotlinx-gettext"
+            displayName = "Kotlinx Gettext"
             implementationClass = "name.kropp.kotlinx.gettext.gradle.KotlinxGettextGradlePlugin"
         }
     }
@@ -27,4 +28,11 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+pluginBundle {
+    website = "https://github.com/kropp/kotlinx-gettext"
+    vcsUrl = "https://github.com/kropp/kotlinx-gettext"
+    description = "Extract strings for i18n from Kotlin files in Gettext format"
+    tags = listOf("kotlin", "i18n", "gettext")
 }
