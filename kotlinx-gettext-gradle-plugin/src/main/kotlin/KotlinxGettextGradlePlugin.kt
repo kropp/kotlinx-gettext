@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 const val KOTLIN_PLUGIN_ID = "name.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_GROUP = "name.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_NAME = "kotlinx-gettext-plugin"
-const val KOTLIN_PLUGIN_VERSION = "0.1"
+const val KOTLIN_PLUGIN_VERSION = "0.2"
 
 @Suppress("unused")
 class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
@@ -36,7 +36,7 @@ class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
         target.tasks.register("gettext") {
             it.dependsOn(target.tasks.withType(KotlinCompile::class.java))
         }
-        if ("gettext" in target.gradle.startParameter.taskNames) {
+        if (target.gradle.startParameter.taskNames.any { it.endsWith("gettext") }) {
             extension.enabled.set(true)
         }
     }
