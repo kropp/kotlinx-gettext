@@ -34,4 +34,11 @@ class PoDataTest {
 
         assertEquals(null, po["nonexistent key"])
     }
+
+    @Test
+    fun multilineKey() {
+        val po = PoData.read(Thread.currentThread().contextClassLoader.getResourceAsStream("de.po")!!)
+
+        assertEquals("Sehr sehr lange\n\nBeschreibung", po["Very very long\n\ndescription"])
+    }
 }

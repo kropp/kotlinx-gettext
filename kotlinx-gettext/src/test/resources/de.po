@@ -1,0 +1,7 @@
+msgid ""
+msgstr ""
+
+msgid "Very very long\n\n"
+"description"
+msgstr "Sehr sehr lange\n\n"
+"Beschreibung"

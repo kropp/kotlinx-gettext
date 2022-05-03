@@ -47,6 +47,15 @@ class PoData(
         return entry.plural
     }
 
+    private enum class Key {
+        Context,
+        Id,
+        Str,
+        Plural,
+        Cases,
+        Unknown
+    }
+
     companion object {
         /**
          * Context and key separator.
@@ -68,8 +77,11 @@ class PoData(
             var plural: String? = null
             var cases = mutableListOf<String>()
 
+            var key = Key.Unknown
+
             input.bufferedReader(Charsets.UTF_8).useLines { lines ->
-                lines.forEach { line ->
+                lines.forEach {
+                    val line = it.replace("\\n", "\n")
                     when {
                         line.isBlank() -> {
                             entry(entries, context, id, str, plural, cases)
@@ -78,19 +90,26 @@ class PoData(
                             str = ""
                             plural = null
                             cases = mutableListOf()
+                            key = Key.Unknown
                         }
-                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctxt ").trim('"')
-                        line.startsWith("msgid ") -> id = line.substringAfter("msgid ").trim('"')
-                        line.startsWith("msgid_plural ") -> plural = line.substringAfter("msgid_plural ").trim('"')
-                        line.startsWith("msgstr ") -> str = line.substringAfter("msgstr ").trim('"')
-                        line.startsWith("msgstr[") -> cases += line.substringAfter("msgstr[").substringAfter("] ").trim('"')
+                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").trim('"'); key = Key.Context }
+                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").trim('"'); key = Key.Id }
+                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").trim('"'); key = Key.Plural }
+                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").trim('"'); key = Key.Str }
+                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").trim('"'); key = Key.Cases }
                         else -> {
                             val trimmed = line.trim('"')
-                            if (id?.isEmpty() == true && trimmed.startsWith("Plural-Forms:")) {
+                            if (id?.isEmpty() == true && key == Key.Str && trimmed.startsWith("Plural-Forms:")) {
                                 pluralRule = trimmed.substringAfter("plural=").substringBefore(';')
-                            }
-                            if (cases.isNotEmpty()) {
-                                cases[0] = cases[0] + "\"\n\"" + trimmed
+                            } else when(key) {
+                                Key.Context -> context += trimmed
+                                Key.Id -> id += trimmed
+                                Key.Str -> str += trimmed
+                                Key.Plural -> plural += trimmed
+                                Key.Cases -> if (cases.isNotEmpty()) {
+                                    cases[cases.size - 1] += trimmed
+                                }
+                                else -> {}
                             }
                         }
                     }
