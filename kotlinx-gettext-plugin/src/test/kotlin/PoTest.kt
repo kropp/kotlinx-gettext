@@ -16,7 +16,7 @@
 
 package name.kropp.kotlinx.gettext
 
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.io.ByteArrayOutputStream
 import kotlin.test.assertEquals
 

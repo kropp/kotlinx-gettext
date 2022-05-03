@@ -18,7 +18,7 @@ package name.kropp.kotlinx.gettext
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.io.File
 import kotlin.test.assertEquals
 

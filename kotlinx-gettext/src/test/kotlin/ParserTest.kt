@@ -16,8 +16,8 @@
 
 package name.kropp.kotlinx.gettext
 
-import com.github.kropp.kotlinx.gettext.BinaryOp.*
-import org.junit.jupiter.api.Test
+import name.kropp.kotlinx.gettext.BinaryOp.*
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ParserTest {

@@ -18,7 +18,7 @@ package name.kropp.kotlinx.gettext
 
 import name.kropp.kotlinx.gettext.BinaryOp.*
 import name.kropp.kotlinx.gettext.PluralRuleToken.*
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
