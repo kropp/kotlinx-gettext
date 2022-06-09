@@ -97,7 +97,7 @@ data class PoEntry(
     private fun String.escape(): String {
         if (length <= 2) return this
         // replace " with \" when in the middle of a string
-        return substring(0, this.lastIndex).replace(quoteRegex) { println(it.groupValues[1]); it.groupValues[1] + "\\\"" + it.groupValues[2] } + last()
+        return replace(quoteRegex) { println(it.groupValues[1]); it.groupValues[1] + "\\\"" + it.groupValues[2] }
     }
     private val quoteRegex = Regex("([^\n])\"(.)")
 

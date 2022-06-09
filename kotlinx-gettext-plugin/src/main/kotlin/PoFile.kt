@@ -111,11 +111,11 @@ class PoFile(
                         line.startsWith("#: ") -> references += line.substringAfter("#: ")
                         line.startsWith("#, ") -> flags = line.substringAfter("#, ")
                         line.startsWith("#| ") -> previous += line.substringAfter("#| ")
-                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctxt ").trim('"')
-                        line.startsWith("msgid ") -> text = line.substringAfter("msgid ").trim('"')
-                        line.startsWith("msgid_plural ") -> plural = line.substringAfter("msgid_plural ").trim('"')
-                        line.startsWith("msgstr ") -> cases += line.substringAfter("msgstr ").trim('"')
-                        line.startsWith("msgstr[") -> cases += line.substringAfter("msgstr[").substringAfter("] ").trim('"')
+                        line.startsWith("msgctxt ") -> context = line.substringAfter("msgctxt ").unescape()
+                        line.startsWith("msgid ") -> text = line.substringAfter("msgid ").unescape()
+                        line.startsWith("msgid_plural ") -> plural = line.substringAfter("msgid_plural ").unescape()
+                        line.startsWith("msgstr ") -> cases += line.substringAfter("msgstr ").unescape()
+                        line.startsWith("msgstr[") -> cases += line.substringAfter("msgstr[").substringAfter("] ").unescape()
                         else -> {
                             if (cases.isNotEmpty()) {
                                 cases[0] = cases[0] + "\"\n\"" + line.trim('"')
@@ -129,6 +129,11 @@ class PoFile(
             }
 
             return PoFile(entries.filter { it.text.isNotEmpty() }, entries.firstOrNull { it.text.isEmpty() } ?: DEFAULT_POT_HEADER)
+        }
+
+        private fun String.unescape(): String {
+            val trimmed = if (startsWith('"')) substring(1, lastIndex) else this
+            return trimmed.replace("\\\"", "\"")
         }
     }
 }

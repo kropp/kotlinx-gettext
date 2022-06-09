@@ -84,6 +84,23 @@ fun trc(ctx: String, text: String) {}
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
 
+    @Test
+    fun stringWithQuotes() {
+        val result = compile(SourceFile.kotlin("main.kt", """
+    fun main() {
+      tr("Hello, \"World\"!")
+    }
+    fun tr(text: String) {}
+            """.trimIndent()
+            )
+        )
+
+        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+
+        val potFile = File(result.outputDirectory.parentFile, "i18n.pot").readText()
+        assertEquals("$DEFAULT_POT_HEADER\n\n#: main.kt:2\nmsgid \"Hello, \\\"World\\\"!\"\nmsgstr \"\"\n", potFile)
+    }
+
     private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()
