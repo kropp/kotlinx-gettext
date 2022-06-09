@@ -112,6 +112,11 @@ class I18n private constructor(
     fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String =
         trnc(context, text, plural, n.toInt(), *args)
 
+    /**
+     * Mark [text] for translation, but do not translate it.
+     */
+    fun marktr(text: String): String = text
+
     companion object {
         /**
          * Load translations for given [locale] from given input stream.
