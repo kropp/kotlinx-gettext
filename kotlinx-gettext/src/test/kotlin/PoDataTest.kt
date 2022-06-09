@@ -41,4 +41,11 @@ class PoDataTest {
 
         assertEquals("Sehr sehr lange\n\nBeschreibung", po["Very very long\n\ndescription"])
     }
+
+    @Test
+    fun quotedStrings() {
+        val po = PoData.read(Thread.currentThread().contextClassLoader.getResourceAsStream("quoted.po")!!)
+
+        assertEquals("Hallo \"Welt\"!", po["Hello \"World\"!"])
+    }
 }

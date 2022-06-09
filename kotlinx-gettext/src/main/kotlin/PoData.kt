@@ -92,11 +92,11 @@ class PoData(
                             cases = mutableListOf()
                             key = Key.Unknown
                         }
-                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").trim('"'); key = Key.Context }
-                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").trim('"'); key = Key.Id }
-                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").trim('"'); key = Key.Plural }
-                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").trim('"'); key = Key.Str }
-                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").trim('"'); key = Key.Cases }
+                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").unescape(); key = Key.Context }
+                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").unescape(); key = Key.Id }
+                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").unescape(); key = Key.Plural }
+                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").unescape(); key = Key.Str }
+                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").unescape(); key = Key.Cases }
                         else -> {
                             val trimmed = line.trim('"')
                             if (id?.isEmpty() == true && key == Key.Str && trimmed.startsWith("Plural-Forms:")) {
@@ -117,6 +117,12 @@ class PoData(
                 entry(entries, context, id, str, plural, cases)
             }
             return PoData(entries, PluralRule(pluralRule))
+        }
+
+        @JvmStatic
+        private fun String.unescape(): String {
+            val trimmed = if (startsWith('"')) substring(1, lastIndex) else this
+            return trimmed.replace("\\\"", "\"")
         }
 
         @JvmStatic
