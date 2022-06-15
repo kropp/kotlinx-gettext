@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-import name.kropp.kotlinx.gettext.Gettext
-import name.kropp.kotlinx.gettext.Locale
+package name.kropp.kotlinx.gettext
 
-fun main() {
-    val i18n = Gettext.load(Locale.GERMAN, Thread.currentThread().contextClassLoader.getResourceAsStream("de.po")!!)
-    println(i18n.tr("Hello world!"))
-    println(i18n.trn("You have a message", "You have {0} messages", 1, 1))
-    println(i18n.trn("You have a message", "You have {0} messages", 3, 3))
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class GettextTest {
+    @Test
+    fun test() {
+        val gettext = Gettext.load(Locale("ru"), Thread.currentThread().contextClassLoader.getResourceAsStream("ru.po")!!)
+
+        assertEquals("Установлена", gettext.trc("feminine", "Installed"))
+        assertEquals("Установлен", gettext.trc("masculine", "Installed"))
+    }
 }

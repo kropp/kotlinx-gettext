@@ -16,16 +16,4 @@
 
 package name.kropp.kotlinx.gettext
 
-import kotlin.test.Test
-import java.util.*
-import kotlin.test.assertEquals
-
-class I18nTest {
-    @Test
-    fun test() {
-        val i18n = I18n.load(Locale("ru"), Thread.currentThread().contextClassLoader.getResourceAsStream("ru.po")!!)
-
-        assertEquals("Установлена", i18n.trc("feminine", "Installed"))
-        assertEquals("Установлен", i18n.trc("masculine", "Installed"))
-    }
-}
+typealias Locale = java.util.Locale

@@ -2,12 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("name.kropp.kotlinx-gettext") version "0.2"
+    id("name.kropp.kotlinx-gettext") version "0.3"
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("name.kropp.kotlinx-gettext:kotlinx-gettext:0.2")
+    implementation(project(":kotlinx-gettext"))
+    // in your code replace the previous project dependency with the following one:
+    // implementation("name.kropp.kotlinx-gettext:kotlinx-gettext:0.3")
 }
 
 tasks.withType<KotlinCompile> {
