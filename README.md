@@ -12,7 +12,7 @@ The project consists of several parts:
 
 ### Library
 
-Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.3"` to the dependencies of your project.
+Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.3.1"` to the dependencies of your project.
 The library is available on [Maven Central](https://search.maven.org/artifact/name.kropp.kotlinx-gettext/kotlinx-gettext).
 
 Load translated strings and apply translations using an instance of `I18n` class.
@@ -31,7 +31,7 @@ Apply Gradle plugin to extract strings and setup `gettext` task:
 
 ```kotlin
 plugins {
-  id("name.kropp.kotlinx-gettext") version "0.3"
+  id("name.kropp.kotlinx-gettext") version "0.3.1"
 }
 
 gettext {
