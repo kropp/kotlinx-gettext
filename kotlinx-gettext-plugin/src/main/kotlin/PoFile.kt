@@ -133,7 +133,7 @@ class PoFile(
 
         private fun String.unescape(): String {
             val trimmed = if (startsWith('"')) substring(1, lastIndex) else this
-            return trimmed.replace("\\\"", "\"")
+            return trimmed.replace("\\\"", "\"").replace("\\n", "\n")
         }
     }
 }
