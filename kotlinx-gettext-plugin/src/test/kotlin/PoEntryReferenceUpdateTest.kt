@@ -45,8 +45,8 @@ class PoEntryReferenceUpdateTest {
 
         assertEquals(3, po.entries.size)
         assertEquals(2, po.entries[0].references.size)
-        assertEquals("src/main/kotlin/Other.kt:87", po.entries[0].references[0])
-        assertEquals("src/main/kotlin/File.kt:125", po.entries[0].references[1])
+        assertEquals("src/main/kotlin/File.kt:125", po.entries[0].references[0])
+        assertEquals("src/main/kotlin/Other.kt:87", po.entries[0].references[1])
         assertEquals(1, po.entries[1].references.size)
         assertEquals("src/main/kotlin/File.kt:45", po.entries[1].references[0])
         assertEquals(0, po.entries[2].references.size)
