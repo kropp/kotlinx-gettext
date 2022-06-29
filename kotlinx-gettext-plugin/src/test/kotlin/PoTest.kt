@@ -49,6 +49,7 @@ class PoTest {
 
         assertEquals("", po.header.text)
         assertEquals(1, po.header.cases.size)
+        assertEquals(DEFAULT_POT_HEADER.cases[0], po.header.cases[0])
         assertEquals(1, po.entries.size)
         assertEquals("message-id", po.entries[0].text)
         assertEquals(1, po.entries[0].cases.size)
@@ -63,6 +64,7 @@ class PoTest {
         assertEquals("", po.header.text)
         assertEquals(1, po.header.cases.size)
         assertEquals(1, po.entries.size)
+        assertEquals(DEFAULT_POT_HEADER.cases[0], po.header.cases[0])
         assertEquals("message-id", po.entries[0].text)
         assertEquals(1, po.entries[0].cases.size)
         assertEquals("Hello \"World\"!", po.entries[0].cases[0])
@@ -82,6 +84,7 @@ class PoTest {
 
         assertEquals("", po.header.text)
         assertEquals(1, po.header.cases.size)
+        assertEquals(DEFAULT_POT_HEADER.cases[0], po.header.cases[0])
         assertEquals(1, po.entries.size)
         assertEquals("message-id", po.entries[0].text)
         assertEquals(1, po.entries[0].cases.size)

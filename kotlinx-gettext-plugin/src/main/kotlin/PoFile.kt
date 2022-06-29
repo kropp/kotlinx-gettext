@@ -154,17 +154,16 @@ val DEFAULT_POT_HEADER = PoEntry(
     "",
     null,
     listOf(
-        "\"\n\""+
-        "Project-Id-Version: PACKAGE VERSION\\n\"\n\""+
-        "Report-Msgid-Bugs-To: \\n\"\n\""+
-        "\"\n\""+
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n\""+
-        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n\""+
-        "Language-Team: LANGUAGE <LL@li.org>\\n\"\n\""+
-        "Language: \\n\"\n\""+
-        "MIME-Version: 1.0\\n\"\n\""+
-        "Content-Type: text/plain; charset=UTF-8\\n\"\n\""+
-        "Content-Transfer-Encoding: 8bit\\n\"\n\""+
-        "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n"
+        "Project-Id-Version: PACKAGE VERSION\n"+
+        "Report-Msgid-Bugs-To: \n"+
+        "\n"+
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"+
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"+
+        "Language-Team: LANGUAGE <LL@li.org>\n"+
+        "Language: \n"+
+        "MIME-Version: 1.0\n"+
+        "Content-Type: text/plain; charset=UTF-8\n"+
+        "Content-Transfer-Encoding: 8bit\n"+
+        "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
     )
 )
