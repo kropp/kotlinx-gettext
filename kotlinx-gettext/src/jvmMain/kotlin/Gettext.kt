@@ -22,7 +22,7 @@ import java.text.MessageFormat
 /**
  * Provides `gettext`-compatible interface for string translation via PO files.
  */
-class Gettext private constructor(
+public class Gettext private constructor(
     override val locale: Locale,
     private val poData: PoData
 ) : I18n {
@@ -118,12 +118,12 @@ class Gettext private constructor(
      */
     override fun marktr(text: String): String = text
 
-    companion object {
+    public companion object {
         /**
          * Load translations for given [locale] from given input stream.
          */
         @JvmStatic
-        fun load(locale: Locale, s: InputStream): Gettext {
+        public fun load(locale: Locale, s: InputStream): Gettext {
             return Gettext(locale, PoData.read(s))
         }
 
@@ -131,6 +131,6 @@ class Gettext private constructor(
          * Fallback locale that doesn't provide any translations.
          */
         @JvmStatic
-        val Fallback = Gettext(Locale.ROOT, PoData(emptyMap(), EmptyRule))
+        public val Fallback: Gettext = Gettext(Locale.ROOT, PoData(emptyMap(), EmptyRule))
     }
 }

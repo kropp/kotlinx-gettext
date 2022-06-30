@@ -17,8 +17,10 @@
 package name.kropp.kotlinx.gettext
 
 /**
- * Parse plural rule expression from PO file
+ * Data for a single PO file entry.
  */
-@Suppress("FunctionName")
-fun PluralRule(rule: String) = PluralRuleParser(rule).parse()
-
+public class PoEntry(
+    public val str: String,
+    public val plural: String?,
+    public val cases: Array<String>
+)

@@ -2,29 +2,34 @@ import java.net.URI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
+    kotlin("multiplatform")
     `java-library`
     `maven-publish`
     signing
 }
 
-dependencies {
-    implementation(kotlin("stdlib"))
+kotlin {
+    explicitApi()
 
-    testImplementation(kotlin("test"))
-}
+    jvm {
+        java {
+            withJavadocJar()
+            withSourcesJar()
+        }
+    }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+    }
 }
 
 publishing {

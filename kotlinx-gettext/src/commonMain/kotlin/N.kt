@@ -16,4 +16,10 @@
 
 package name.kropp.kotlinx.gettext
 
-typealias Locale = java.util.Locale
+/**
+ * An `n` literal as used in plural rule
+ */
+public object N : PluralRuleExpression, PluralRuleToken {
+    override fun evaluate(n: Int): Int = n
+    override fun toString(): String = "n"
+}

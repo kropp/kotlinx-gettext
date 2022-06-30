@@ -17,8 +17,11 @@
 package name.kropp.kotlinx.gettext
 
 /**
- * Fallback rule, which always evaluates to zero
+ * Expression used in PO plural rule
  */
-object EmptyRule : PluralRuleExpression {
-    override fun evaluate(n: Int): Int = 0
+public interface PluralRuleExpression {
+    /**
+     * Evaluate the rule for the given [n]
+     */
+    public fun evaluate(n: Int): Int
 }

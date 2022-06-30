@@ -9,4 +9,4 @@ rootProject.name = "kotlinx-gettext"
 
 include("kotlinx-gettext", "kotlinx-gettext-plugin", "kotlinx-gettext-gradle-plugin")
 
-include("sample")
+//include("sample")

@@ -17,49 +17,40 @@
 package name.kropp.kotlinx.gettext
 
 /**
- * Any binary expression used in plural rule
+ * A ternary expression, like in C or Java.
+ *
+ * If [condition] evaluates to a non-zero value, the result is the evaluation result of the [left] part,
+ * otherwise it is the result of the evaluation of the [right] part.
  */
-class BinaryExpression(
+public class TernaryExpression(
+    private val condition: PluralRuleExpression,
     private val left: PluralRuleExpression,
-    private val op: BinaryOp,
     private val right: PluralRuleExpression,
 ) : PluralRuleExpression {
-
     override fun evaluate(n: Int): Int {
-        return when(op) {
-            BinaryOp.NotEquals -> if (left.evaluate(n) != right.evaluate(n)) 1 else 0
-            BinaryOp.Equals -> if (left.evaluate(n) == right.evaluate(n)) 1 else 0
-            BinaryOp.Less -> if (left.evaluate(n) < right.evaluate(n)) 1 else 0
-            BinaryOp.LessOrEquals -> if (left.evaluate(n) <= right.evaluate(n)) 1 else 0
-            BinaryOp.Greater -> if (left.evaluate(n) > right.evaluate(n)) 1 else 0
-            BinaryOp.GreaterOrEquals -> if (left.evaluate(n) >= right.evaluate(n)) 1 else 0
-            BinaryOp.Remainder -> left.evaluate(n) % right.evaluate(n)
-            BinaryOp.And -> if ((left.evaluate(n) != 0) && (right.evaluate(n) != 0)) 1 else 0
-            BinaryOp.Or -> if ((left.evaluate(n) != 0) || (right.evaluate(n) != 0)) 1 else 0
-        }
+        return if (condition.evaluate(n) != 0) left.evaluate(n) else right.evaluate(n)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as BinaryExpression
+        if (other !is TernaryExpression) return false
 
+        if (condition != other.condition) return false
         if (left != other.left) return false
-        if (op != other.op) return false
         if (right != other.right) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = left.hashCode()
-        result = 31 * result + op.hashCode()
+        var result = condition.hashCode()
+        result = 31 * result + left.hashCode()
         result = 31 * result + right.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "$left $op $right"
+        return "$condition ? $left : $right"
     }
 }

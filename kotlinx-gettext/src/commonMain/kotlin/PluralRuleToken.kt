@@ -17,21 +17,11 @@
 package name.kropp.kotlinx.gettext
 
 /**
- * Binary operators supported in plural rules.
- *
- * Ordered by priority
+ * A token in plural rule, such as number, logical or comparison operation, or parenthesis
  */
-enum class BinaryOp : PluralRuleToken {
-    Or,
-
-    And,
-
-    NotEquals,
-    Equals,
-    Less,
-    LessOrEquals,
-    Greater,
-    GreaterOrEquals,
-
-    Remainder,
+public interface PluralRuleToken {
+    public object LeftParen : PluralRuleToken
+    public object RightParen : PluralRuleToken
+    public object QuestionMark : PluralRuleToken
+    public object Colon : PluralRuleToken
 }

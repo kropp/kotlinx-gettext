@@ -16,13 +16,16 @@
 
 package name.kropp.kotlinx.gettext
 
+import name.kropp.kotlinx.gettext.PluralRule
+import name.kropp.kotlinx.gettext.PluralRuleExpression
+import name.kropp.kotlinx.gettext.PoEntry
 import java.io.InputStream
 
 /**
  * Low-level representation of PO file.
  * Clients should use [I18n] instead.
  */
-class PoData(
+public class PoData(
     private val strings: Map<String, PoEntry>,
     private val pluralRule: PluralRuleExpression
 ) {
@@ -30,7 +33,7 @@ class PoData(
      * Get translation string for the key [id].
      * Note: When context is needed, the key is prefixed with it and [CONTEXT_DELIMITER].
      */
-    operator fun get(id: String): String? {
+    public operator fun get(id: String): String? {
         return strings[id]?.str
     }
 
@@ -38,7 +41,7 @@ class PoData(
      * Get plural translation for the key [id]. The plural form is evaluated against the number [n].
      * Note: When context is needed, the key is prefixed with it and [CONTEXT_DELIMITER].
      */
-    operator fun get(id: String, n: Int): String? {
+    public operator fun get(id: String, n: Int): String? {
         val entry = strings[id] ?: return null
         val case = pluralRule.evaluate(n)
         if (0 <= case && case < entry.cases.size) {
@@ -56,18 +59,18 @@ class PoData(
         Unknown
     }
 
-    companion object {
+    public companion object {
         /**
          * Context and key separator.
          */
         @JvmStatic
-        val CONTEXT_DELIMITER = '\u0004'
+        public val CONTEXT_DELIMITER: Char = '\u0004'
 
         /**
          * Loads PO file from provided [input].
          */
         @JvmStatic
-        fun read(input: InputStream): PoData {
+        public fun read(input: InputStream): PoData {
             val entries = mutableMapOf<String, PoEntry>()
             var pluralRule = ""
 
@@ -92,11 +95,19 @@ class PoData(
                             cases = mutableListOf()
                             key = Key.Unknown
                         }
-                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").unescape(); key = Key.Context }
-                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").unescape(); key = Key.Id }
-                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").unescape(); key = Key.Plural }
-                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").unescape(); key = Key.Str }
-                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").unescape(); key = Key.Cases }
+                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").unescape(); key =
+                            Key.Context
+                        }
+                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").unescape(); key = Key.Id
+                        }
+                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").unescape(); key =
+                            Key.Plural
+                        }
+                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").unescape(); key = Key.Str
+                        }
+                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").unescape(); key =
+                            Key.Cases
+                        }
                         else -> {
                             val trimmed = line.trim('"')
                             if (id?.isEmpty() == true && key == Key.Str && trimmed.startsWith("Plural-Forms:")) {

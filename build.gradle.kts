@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.10" apply false
+    kotlin("multiplatform") version "1.6.10" apply false
     id("com.google.devtools.ksp") version "1.6.10-1.0.2" apply false
 }
 

@@ -16,11 +16,4 @@
 
 package name.kropp.kotlinx.gettext
 
-/**
- * Data for a single PO file entry.
- */
-class PoEntry(
-    val str: String,
-    val plural: String?,
-    val cases: Array<String>
-)
+public actual typealias Locale = java.util.Locale

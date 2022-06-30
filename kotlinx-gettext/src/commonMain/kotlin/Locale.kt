@@ -16,10 +16,4 @@
 
 package name.kropp.kotlinx.gettext
 
-/**
- * An `n` literal as used in plural rule
- */
-object N : PluralRuleExpression, PluralRuleToken {
-    override fun evaluate(n: Int): Int = n
-    override fun toString(): String = "n"
-}
+public expect class Locale

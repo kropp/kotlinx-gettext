@@ -16,78 +16,78 @@
 
 package name.kropp.kotlinx.gettext
 
-interface I18n {
+public interface I18n {
     /**
      * Current locale.
      */
-    val locale: Locale
+    public val locale: Locale
 
     /**
      * Translate [text].
      */
-    fun tr(text: String): String
+    public fun tr(text: String): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with provided [args].
      */
-    fun tr(text: String, vararg args: Any?): String
+    public fun tr(text: String, vararg args: Any?): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n].
      */
-    fun trn(text: String, plural: String, n: Int): String
+    public fun trn(text: String, plural: String, n: Int): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n].
      */
-    fun trn(text: String, plural: String, n: Long): String
+    public fun trn(text: String, plural: String, n: Long): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n].
      */
-    fun trn(text: String, plural: String, n: Int, vararg args: Any?): String
+    public fun trn(text: String, plural: String, n: Int, vararg args: Any?): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n].
      */
-    fun trn(text: String, plural: String, n: Long, vararg args: Any?): String
+    public fun trn(text: String, plural: String, n: Long, vararg args: Any?): String
 
     /**
      * Translate [text] in a given [context].
      */
-    fun trc(context: String, text: String): String
+    public fun trc(context: String, text: String): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with provided [args] in a given [context].
      */
-    fun trc(context: String, text: String, vararg args: Any?): String
+    public fun trc(context: String, text: String, vararg args: Any?): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
      */
-    fun trnc(context: String, text: String, plural: String, n: Int): String
+    public fun trnc(context: String, text: String, plural: String, n: Int): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
      */
-    fun trnc(context: String, text: String, plural: String, n: Long): String
+    public fun trnc(context: String, text: String, plural: String, n: Long): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n] in a given [context].
      */
-    fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String
+    public fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String
 
     /**
      * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n] in a given [context].
      */
-    fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String
+    public fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String
 
     /**
      * Mark [text] for translation, but do not translate it.
      */
-    fun marktr(text: String): String
+    public fun marktr(text: String): String
 }
