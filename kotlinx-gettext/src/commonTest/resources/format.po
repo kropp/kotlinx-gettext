@@ -1,0 +1,5 @@
+msgid ""
+msgstr ""
+
+msgid "Hello {{name}}!"
+msgstr "Hallo {{name}}!"

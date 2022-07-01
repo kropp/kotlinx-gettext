@@ -16,121 +16,52 @@
 
 package name.kropp.kotlinx.gettext
 
+ import okio.source
 import java.io.InputStream
 import java.text.MessageFormat
 
 /**
- * Provides `gettext`-compatible interface for string translation via PO files.
+ * Translate [MessageFormat]-compatible formatted [text] with provided [args].
  */
-public class Gettext private constructor(
-    override val locale: Locale,
-    private val poData: PoData
-) : I18n {
-    /**
-     * Translate [text].
-     */
-    override fun tr(text: String): String {
-        return poData[text] ?: text
-    }
+public fun I18n.tr(text: String, vararg args: Any?): String =
+    MessageFormat.format(tr(text), *args)
 
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with provided [args].
-     */
-    override fun tr(text: String, vararg args: Any?): String {
-        val str = poData[text] ?: text
-        return MessageFormat.format(str, *args)
-    }
+/**
+ * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+ * with provided [args], chosen based on provided number [n].
+ */
+public fun I18n.trn(text: String, plural: String, n: Int, vararg args: Any?): String =
+    MessageFormat.format(trn(text, plural, n), *args)
 
-    /**
-     * Translate [text] with different [plural] form, chosen based on provided number [n].
-     */
-    override fun trn(text: String, plural: String, n: Int): String {
-        return poData[text, n] ?: if (n == 1) text else plural
-    }
+/**
+ * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+ * with provided [args], chosen based on provided number [n].
+ */
+public fun I18n.trn(text: String, plural: String, n: Long, vararg args: Any?): String =
+    trn(text, plural, n.toInt(), *args)
 
-    /**
-     * Translate [text] with different [plural] form, chosen based on provided number [n].
-     */
-    override fun trn(text: String, plural: String, n: Long): String = trn(text, plural, n.toInt())
+/**
+ * Translate [MessageFormat]-compatible formatted [text] with provided [args] in a given [context].
+ */
+public fun I18n.trc(context: String, text: String, vararg args: Any?): String =
+    MessageFormat.format(trc(context, text), *args)
 
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
-     * with provided [args], chosen based on provided number [n].
-     */
-    override fun trn(text: String, plural: String, n: Int, vararg args: Any?): String {
-        val str = poData[text, n] ?: if (n == 1) text else plural
-        return MessageFormat.format(str, *args)
-    }
+/**
+ * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+ * with provided [args], chosen based on provided number [n] in a given [context].
+ */
+public fun I18n.trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String =
+    MessageFormat.format(trnc(context, text, plural, n), *args)
 
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
-     * with provided [args], chosen based on provided number [n].
-     */
-    override fun trn(text: String, plural: String, n: Long, vararg args: Any?): String =
-        trn(text, plural, n.toInt(), *args)
+/**
+ * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+ * with provided [args], chosen based on provided number [n] in a given [context].
+ */
+public fun I18n.trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String =
+    trnc(context, text, plural, n.toInt(), *args)
 
-    /**
-     * Translate [text] in a given [context].
-     */
-    override fun trc(context: String, text: String): String {
-        return poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
-    }
-
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with provided [args] in a given [context].
-     */
-    override fun trc(context: String, text: String, vararg args: Any?): String {
-        val str = poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
-        return MessageFormat.format(str, *args)
-    }
-
-    /**
-     * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
-     */
-    override fun trnc(context: String, text: String, plural: String, n: Int): String {
-        return poData["$context${PoData.CONTEXT_DELIMITER}$text", n] ?: if (n == 1) text else plural
-    }
-
-    /**
-     * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
-     */
-    override fun trnc(context: String, text: String, plural: String, n: Long): String =
-        trnc(context, text, plural, n.toInt())
-
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
-     * with provided [args], chosen based on provided number [n] in a given [context].
-     */
-    override fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String {
-        val str = poData["$context${PoData.CONTEXT_DELIMITER}$text", n] ?: if (n == 1) text else plural
-        return MessageFormat.format(str, *args)
-    }
-
-    /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
-     * with provided [args], chosen based on provided number [n] in a given [context].
-     */
-    override fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String =
-        trnc(context, text, plural, n.toInt(), *args)
-
-    /**
-     * Mark [text] for translation, but do not translate it.
-     */
-    override fun marktr(text: String): String = text
-
-    public companion object {
-        /**
-         * Load translations for given [locale] from given input stream.
-         */
-        @JvmStatic
-        public fun load(locale: Locale, s: InputStream): Gettext {
-            return Gettext(locale, PoData.read(s))
-        }
-
-        /**
-         * Fallback locale that doesn't provide any translations.
-         */
-        @JvmStatic
-        public val Fallback: Gettext = Gettext(Locale.ROOT, PoData(emptyMap(), EmptyRule))
-    }
-}
+/**
+ * Load translations for given [locale] from given input stream.
+ */
+public fun Gettext.Companion.load(locale: Locale, s: InputStream): Gettext =
+    load(locale, s.source())

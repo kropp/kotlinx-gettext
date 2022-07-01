@@ -27,4 +27,11 @@ class GettextTest {
         assertEquals("Установлена", gettext.trc("feminine", "Installed"))
         assertEquals("Установлен", gettext.trc("masculine", "Installed"))
     }
+
+    @Test
+    fun formatting() {
+        val gettext = Gettext.load(Locale("ru"), resource("format.po"))
+
+        assertEquals("Hallo Gettext!", gettext.tr("Hello {{name}}!", "name" to "Gettext"))
+    }
 }

@@ -28,9 +28,9 @@ public interface I18n {
     public fun tr(text: String): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with provided [args].
+     * Translate formatted [text] with provided [args].
      */
-    public fun tr(text: String, vararg args: Any?): String
+    public fun tr(text: String, vararg args: Pair<String,String>): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n].
@@ -43,16 +43,16 @@ public interface I18n {
     public fun trn(text: String, plural: String, n: Long): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * Translate formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n].
      */
-    public fun trn(text: String, plural: String, n: Int, vararg args: Any?): String
+    public fun trn(text: String, plural: String, n: Int, vararg args: Pair<String,String>): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * Translate formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n].
      */
-    public fun trn(text: String, plural: String, n: Long, vararg args: Any?): String
+    public fun trn(text: String, plural: String, n: Long, vararg args: Pair<String,String>): String
 
     /**
      * Translate [text] in a given [context].
@@ -60,9 +60,9 @@ public interface I18n {
     public fun trc(context: String, text: String): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with provided [args] in a given [context].
+     * Translate formatted [text] with provided [args] in a given [context].
      */
-    public fun trc(context: String, text: String, vararg args: Any?): String
+    public fun trc(context: String, text: String, vararg args: Pair<String,String>): String
 
     /**
      * Translate [text] with different [plural] form, chosen based on provided number [n] in a given [context].
@@ -75,16 +75,16 @@ public interface I18n {
     public fun trnc(context: String, text: String, plural: String, n: Long): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * Translate formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n] in a given [context].
      */
-    public fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Any?): String
+    public fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Pair<String,String>): String
 
     /**
-     * Translate [MessageFormat]-compatible formatted [text] with different [plural] form
+     * Translate formatted [text] with different [plural] form
      * with provided [args], chosen based on provided number [n] in a given [context].
      */
-    public fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Any?): String
+    public fun trnc(context: String, text: String, plural: String, n: Long, vararg args: Pair<String,String>): String
 
     /**
      * Mark [text] for translation, but do not translate it.
