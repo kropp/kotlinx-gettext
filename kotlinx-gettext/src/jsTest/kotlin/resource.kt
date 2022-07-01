@@ -16,6 +16,14 @@
 
 package name.kropp.kotlinx.gettext
 
-public expect class Locale(name: String)
+import okio.*
+import okio.Path.Companion.toPath
 
-public expect val DefaultLocale: Locale
+external val __dirname: dynamic
+
+actual fun resource(name: String): Source {
+    val cwd = __dirname.toString().toPath()
+    val projectRoot = cwd.parent!!.parent!!.parent!!.parent!!.parent!!
+    val resourcePath = projectRoot / "kotlinx-gettext" / "build" / "processedResources" / "js" / "test" / name
+    return NodeJsFileSystem.source(resourcePath)
+}

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.net.URI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -6,6 +8,10 @@ plugins {
     `java-library`
     `maven-publish`
     signing
+}
+
+rootProject.plugins.withType<NodeJsRootPlugin> {
+    rootProject.the<NodeJsRootExtension>().download = false
 }
 
 kotlin {
@@ -18,16 +24,28 @@ kotlin {
         }
     }
 
+    js {
+        nodejs {
+           testTask {}
+        }
+    }
+
     sourceSets {
+        val okioVersion = "3.2.0"
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation("com.squareup.okio:okio:3.2.0")
+                implementation("com.squareup.okio:okio:$okioVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation("com.squareup.okio:okio-nodefilesystem:$okioVersion")
             }
         }
     }
