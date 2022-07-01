@@ -66,13 +66,37 @@ public class Gettext private constructor(
 
     override fun marktr(text: String): String = text
 
-    // temporary dumb implementation
     private fun String.format(args: Array<out Pair<String, String>>): String {
-        var result = this
-        for ((key, value) in args) {
-            result = result.replace("{{$key}}", value)
+        var currentOffset = 0
+        var nextIndex = indexOf("{{", currentOffset)
+        if (nextIndex == -1) {
+            return this
         }
-        return result
+
+        return buildString {
+            do {
+                append(this@format.substring(currentOffset, nextIndex))
+                currentOffset = nextIndex + 2
+                nextIndex = this@format.indexOf("}}", currentOffset)
+                if (nextIndex == -1) {
+                    // incorrect format, append the rest of the string as is
+                    break
+                }
+                val key = this@format.substring(currentOffset, nextIndex)
+                for (arg in args) {
+                    if (key == arg.first) {
+                        append(arg.second)
+                        break
+                    }
+                }
+                currentOffset = nextIndex + 2
+                nextIndex = this@format.indexOf("{{", currentOffset)
+            } while (nextIndex != -1)
+
+            if (currentOffset < this@format.length) {
+                append(this@format.substring(currentOffset, this@format.length))
+            }
+        }
     }
 
     public companion object {
