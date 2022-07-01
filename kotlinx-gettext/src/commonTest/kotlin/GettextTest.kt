@@ -21,8 +21,8 @@ import kotlin.test.assertEquals
 
 class GettextTest {
     @Test
-    fun test() {
-        val gettext = Gettext.load(Locale("ru"), Thread.currentThread().contextClassLoader.getResourceAsStream("ru.po")!!)
+    fun context() {
+        val gettext = Gettext.load(Locale("ru"), resource("ru.po"))
 
         assertEquals("Установлена", gettext.trc("feminine", "Installed"))
         assertEquals("Установлен", gettext.trc("masculine", "Installed"))

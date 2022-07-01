@@ -17,3 +17,5 @@
 package name.kropp.kotlinx.gettext
 
 public expect class Locale
+
+public expect val DefaultLocale: Locale

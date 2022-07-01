@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 class PoDataTest {
     @Test
     fun test() {
-        val po = PoData.read(Thread.currentThread().contextClassLoader.getResourceAsStream("en.po")!!)
+        val po = PoData.read(resource("en.po"))
 
         assertEquals("", po["Update available"])
         assertEquals("{0,number,integer} updates available", po["Update available", 0])
@@ -37,14 +37,14 @@ class PoDataTest {
 
     @Test
     fun multilineKey() {
-        val po = PoData.read(Thread.currentThread().contextClassLoader.getResourceAsStream("de.po")!!)
+        val po = PoData.read(resource("de.po"))
 
         assertEquals("Sehr sehr lange\n\nBeschreibung", po["Very very long\n\ndescription"])
     }
 
     @Test
     fun quotedStrings() {
-        val po = PoData.read(Thread.currentThread().contextClassLoader.getResourceAsStream("quoted.po")!!)
+        val po = PoData.read(resource("quoted.po"))
 
         assertEquals("Hallo \"Welt\"!", po["Hello \"World\"!"])
     }

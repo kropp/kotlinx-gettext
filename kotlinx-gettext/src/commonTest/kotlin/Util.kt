@@ -16,7 +16,6 @@
 
 package name.kropp.kotlinx.gettext
 
-public actual typealias Locale = java.util.Locale
+import okio.Source
 
-public actual val DefaultLocale: Locale
-    get() = Locale.ROOT
+public expect fun resource(name: String): Source

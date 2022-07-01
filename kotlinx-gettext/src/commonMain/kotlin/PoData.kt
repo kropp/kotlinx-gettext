@@ -16,10 +16,8 @@
 
 package name.kropp.kotlinx.gettext
 
-import name.kropp.kotlinx.gettext.PluralRule
-import name.kropp.kotlinx.gettext.PluralRuleExpression
-import name.kropp.kotlinx.gettext.PoEntry
-import java.io.InputStream
+import okio.Source
+import okio.buffer
 
 /**
  * Low-level representation of PO file.
@@ -63,14 +61,12 @@ public class PoData(
         /**
          * Context and key separator.
          */
-        @JvmStatic
         public val CONTEXT_DELIMITER: Char = '\u0004'
 
         /**
          * Loads PO file from provided [input].
          */
-        @JvmStatic
-        public fun read(input: InputStream): PoData {
+        public fun read(input: Source): PoData {
             val entries = mutableMapOf<String, PoEntry>()
             var pluralRule = ""
 
@@ -82,9 +78,11 @@ public class PoData(
 
             var key = Key.Unknown
 
-            input.bufferedReader(Charsets.UTF_8).useLines { lines ->
-                lines.forEach {
-                    val line = it.replace("\\n", "\n")
+            val bufferedReader = input.buffer()
+            try {
+                while(true) {
+                    val rawLine = bufferedReader.readUtf8Line() ?: break
+                    val line = rawLine.replace("\\n", "\n")
                     when {
                         line.isBlank() -> {
                             entry(entries, context, id, str, plural, cases)
@@ -126,17 +124,17 @@ public class PoData(
                     }
                 }
                 entry(entries, context, id, str, plural, cases)
+            } finally {
+                bufferedReader.close()
             }
             return PoData(entries, PluralRule(pluralRule))
         }
 
-        @JvmStatic
         private fun String.unescape(): String {
             val trimmed = if (startsWith('"')) substring(1, lastIndex) else this
             return trimmed.replace("\\\"", "\"")
         }
 
-        @JvmStatic
         private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String>) {
             if (!id.isNullOrEmpty()) {
                 entries[if (context != null) "$context$CONTEXT_DELIMITER$id" else id] = PoEntry(str, plural, cases.toTypedArray())
