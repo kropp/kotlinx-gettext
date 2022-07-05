@@ -12,7 +12,7 @@ The project consists of several parts:
 
 ### Library
 
-Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.3.1"` to the dependencies of your project.
+Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.4.0"` to the dependencies of your project.
 The library is available on [Maven Central](https://search.maven.org/artifact/name.kropp.kotlinx-gettext/kotlinx-gettext).
 
 Load translated strings and apply translations using an instance of `I18n` class.
@@ -31,7 +31,7 @@ Apply Gradle plugin to extract strings and setup `gettext` task:
 
 ```kotlin
 plugins {
-  id("name.kropp.kotlinx-gettext") version "0.3.1"
+  id("name.kropp.kotlinx-gettext") version "0.4.0"
 }
 
 gettext {
@@ -46,5 +46,5 @@ Translate messages with any software or service supporting Gettext format. The r
 which you should put into resources.
 
 ## Known issues
- * The library only support Kotlin/JVM as of now, Multiplatform port is in progress.
+ * The library only supports Kotlin/JVM and Kotlin/JS as of now, Multiplatform Native port is in progress.
  * .mo files are not (yet) supported.
