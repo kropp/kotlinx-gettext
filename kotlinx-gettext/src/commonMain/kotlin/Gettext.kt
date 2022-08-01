@@ -23,17 +23,17 @@ import okio.Source
  */
 public class Gettext private constructor(
     override val locale: Locale,
-    private val poData: PoData
+    private val poData: List<PoData>
 ) : I18n {
     override fun tr(text: String): String {
-        return poData[text] ?: text
+        return poData.firstNotNullOfOrNull { it[text] } ?: text
     }
 
     override fun tr(text: String, vararg args: Pair<String, String>): String =
         tr(text).format(args)
 
     override fun trn(text: String, plural: String, n: Int): String {
-        return poData[text, n] ?: if (n == 1) text else plural
+        return poData.firstNotNullOfOrNull { it[text, n] } ?: if (n == 1) text else plural
     }
 
     override fun trn(text: String, plural: String, n: Int, vararg args: Pair<String, String>): String =
@@ -45,14 +45,14 @@ public class Gettext private constructor(
         trn(text, plural, n).format(args)
 
     override fun trc(context: String, text: String): String {
-        return poData["$context${PoData.CONTEXT_DELIMITER}$text"] ?: text
+        return poData.firstNotNullOfOrNull { it["$context${PoData.CONTEXT_DELIMITER}$text"] } ?: text
     }
 
     override fun trc(context: String, text: String, vararg args: Pair<String,String>): String =
         trc(context, text).format(args)
 
     override fun trnc(context: String, text: String, plural: String, n: Int): String {
-        return poData["$context${PoData.CONTEXT_DELIMITER}$text", n] ?: if (n == 1) text else plural
+        return poData.firstNotNullOfOrNull { it["$context${PoData.CONTEXT_DELIMITER}$text", n] } ?: if (n == 1) text else plural
     }
 
     override fun trnc(context: String, text: String, plural: String, n: Int, vararg args: Pair<String,String>): String =
@@ -101,15 +101,23 @@ public class Gettext private constructor(
 
     public companion object {
         /**
-         * Load translations for given [locale] from given input stream.
+         * Load translations for given [locale] from the given [source].
          */
-        public fun load(locale: Locale, s: Source): Gettext {
-            return Gettext(locale, PoData.read(s))
+        public fun load(locale: Locale, source: Source): Gettext {
+            return Gettext(locale, listOf(PoData.read(source)))
+        }
+
+        /**
+         * Load translations for given [locale] from given [sources].
+         * Sources are checked in order of priority, first available translation is used.
+         */
+        public fun load(locale: Locale, vararg sources: Source): Gettext {
+            return Gettext(locale, sources.map { source -> PoData.read(source) })
         }
 
         /**
          * Fallback locale that doesn't provide any translations.
          */
-        public val Fallback: Gettext = Gettext(DefaultLocale, PoData(emptyMap(), EmptyRule))
+        public val Fallback: Gettext = Gettext(DefaultLocale, listOf(PoData(emptyMap(), EmptyRule)))
     }
 }
