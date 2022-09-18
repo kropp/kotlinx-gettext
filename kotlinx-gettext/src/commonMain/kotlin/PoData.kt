@@ -131,8 +131,9 @@ public class PoData(
         }
 
         private fun String.unescape(): String {
-            val trimmed = if (startsWith('"')) substring(1, lastIndex) else this
-            return trimmed.replace("\\\"", "\"")
+            val trimmed = trim()
+            val unquoted = if (trimmed.startsWith('"')) trimmed.substring(1, trimmed.lastIndex) else trimmed
+            return unquoted.replace("\\\"", "\"").replace("\\n", "\n")
         }
 
         private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String>) {

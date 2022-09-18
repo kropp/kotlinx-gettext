@@ -57,6 +57,20 @@ class PoTest {
     }
 
     @Test
+    fun `read simple entry with excess whitespace`() {
+        val s = "$DEFAULT_POT_HEADER\n\nmsgid   \"message-id\"\nmsgstr  \"\"\n"
+        val po = PoFile.read(s.byteInputStream())
+
+        assertEquals("", po.header.text)
+        assertEquals(1, po.header.cases.size)
+        assertEquals(DEFAULT_POT_HEADER.cases[0], po.header.cases[0])
+        assertEquals(1, po.entries.size)
+        assertEquals("message-id", po.entries[0].text)
+        assertEquals(1, po.entries[0].cases.size)
+        assertEquals("", po.entries[0].cases[0])
+    }
+
+    @Test
     fun `read quoted entry`() {
         val s = "$DEFAULT_POT_HEADER\n\nmsgid \"message-id\"\nmsgstr \"Hello \\\"World\\\"!\"\n"
         val po = PoFile.read(s.byteInputStream())

@@ -48,4 +48,11 @@ class PoDataTest {
 
         assertEquals("Hallo \"Welt\"!", po["Hello \"World\"!"])
     }
+
+    @Test
+    fun excessWhitespace() {
+        val po = PoData.read(resource("whitespace.po"))
+
+        assertEquals("Hallo Welt!", po["Hello World!"])
+    }
 }
