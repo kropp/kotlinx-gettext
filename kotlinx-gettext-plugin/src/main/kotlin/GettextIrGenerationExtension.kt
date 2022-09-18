@@ -33,7 +33,10 @@ class GettextIrGenerationExtension(
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         val poEntries = mutableListOf<PoEntry>()
 
+        messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] Processing ${moduleFragment.files.size} files in module ${moduleFragment.name}")
+
         for (file in moduleFragment.files) {
+            messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] Processing ${file.fileEntry.name}")
             val f = File(file.fileEntry.name)
             val relativePath =
                 try {
