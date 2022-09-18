@@ -16,10 +16,11 @@
 
 import name.kropp.kotlinx.gettext.Gettext
 import name.kropp.kotlinx.gettext.Locale
+import name.kropp.kotlinx.gettext.load
 
 fun main() {
     val i18n = Gettext.load(Locale.GERMAN, Thread.currentThread().contextClassLoader.getResourceAsStream("de.po")!!)
     println(i18n.tr("Hello world!"))
-    println(i18n.trn("You have a message", "You have {0} messages", 1, 1))
-    println(i18n.trn("You have a message", "You have {0} messages", 3, 3))
+    println(i18n.trn("You have a message", "You have {{count}} messages", 1, "count" to "1"))
+    println(i18n.trn("You have a message", "You have {{count}} messages", 3, "count" to "3"))
 }

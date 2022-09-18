@@ -16,6 +16,6 @@ msgid "Hello world!"
 msgstr "Hallo Welt!"
 
 msgid "You have a message"
-msgid_plural "You have {0} messages"
+msgid_plural "You have {{count}} messages"
 msgstr[0] "Du hast eine Nachricht"
-msgstr[1] "Du hast {0} Nachrichten"
+msgstr[1] "Du hast {{count}} Nachrichten"
