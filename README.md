@@ -1,4 +1,7 @@
-# Kotlin Gettext
+![Kotlinx Gettext](kotlinx-gettext.png)
+
+![maven](https://img.shields.io/maven-central/v/name.kropp.kotlinx-gettext/kotlinx-gettext)
+![license](https://img.shields.io/github/license/kropp/kotlinx-gettext)
 
 Gettext is a widely used internationalization (i18n) format supported by many tools.
 This project provides pure Kotlin implementation of Gettext.
@@ -12,7 +15,7 @@ The project consists of several parts:
 
 ### Library
 
-Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.4.0"` to the dependencies of your project.
+Add the `"name.kropp.kotlinx-gettext:kotlinx-gettext:0.5.0"` to the dependencies of your project.
 The library is available on [Maven Central](https://search.maven.org/artifact/name.kropp.kotlinx-gettext/kotlinx-gettext).
 
 Load translated strings and apply translations using an instance of `I18n` class.
@@ -31,7 +34,7 @@ Apply Gradle plugin to extract strings and setup `gettext` task:
 
 ```kotlin
 plugins {
-  id("name.kropp.kotlinx-gettext") version "0.4.0"
+  id("name.kropp.kotlinx-gettext") version "0.5.0"
 }
 
 gettext {
