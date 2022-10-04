@@ -28,7 +28,7 @@ class KeywordSpec(
     constructor(spec: String) : this(spec.substringBefore(':'), spec.substringAfter(':', "").let { if (it.isEmpty()) emptyList() else it.split(',').map { KeywordSpecArgument(it) } })
 
     fun matches(expression: IrCall): Boolean {
-        return (expression.symbol.signature as? IdSignature.CommonSignature)?.shortName == keyword
+        return expression.symbol.owner.name.asString() == keyword
     }
 
     fun process(expression: IrCall, reference: String): PoEntry? {
