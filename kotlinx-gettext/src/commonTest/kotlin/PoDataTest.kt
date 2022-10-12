@@ -18,6 +18,7 @@ package name.kropp.kotlinx.gettext
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class PoDataTest {
     @Test
@@ -54,5 +55,12 @@ class PoDataTest {
         val po = PoData.read(resource("whitespace.po"))
 
         assertEquals("Hallo Welt!", po["Hello World!"])
+    }
+
+    @Test
+    fun ignoreEmptyString() {
+        val po = PoData.read(resource("empty.po"))
+
+        assertNull(po["empty"])
     }
 }

@@ -137,7 +137,7 @@ public class PoData(
         }
 
         private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String>) {
-            if (!id.isNullOrEmpty()) {
+            if (!id.isNullOrEmpty() && str.isNotEmpty()) {
                 entries[if (context != null) "$context$CONTEXT_DELIMITER$id" else id] = PoEntry(str, plural, cases.toTypedArray())
             }
         }

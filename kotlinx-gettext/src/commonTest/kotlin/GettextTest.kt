@@ -34,4 +34,11 @@ class GettextTest {
 
         assertEquals("Hallo Gettext!", gettext.tr("Hello {{name}}!", "name" to "Gettext"))
     }
+
+    @Test
+    fun empty() {
+        val gettext = Gettext.load(Locale("de"), resource("empty.po"))
+
+        assertEquals("empty", gettext.tr("empty"))
+    }
 }
