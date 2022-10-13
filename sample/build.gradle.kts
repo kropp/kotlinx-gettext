@@ -1,13 +1,11 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm")
-    id("name.kropp.kotlinx-gettext") version "0.5.0"
+    id("name.kropp.kotlinx-gettext") version "0.5.1"
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("name.kropp.kotlinx-gettext:kotlinx-gettext-jvm:0.5.0")
+    implementation("name.kropp.kotlinx-gettext:kotlinx-gettext-jvm:0.5.1")
 }
 
 gettext {
