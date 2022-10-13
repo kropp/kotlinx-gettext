@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.7.10" apply false
-    id("com.google.devtools.ksp") version "1.7.10-1.0.6" apply false
+    kotlin("multiplatform") version "1.7.20" apply false
+    id("com.google.devtools.ksp") version "1.7.20-1.0.6" apply false
     wrapper
 }
 
