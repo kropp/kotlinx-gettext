@@ -30,21 +30,14 @@ kotlin {
     }
 
     sourceSets {
-        val okioVersion = "3.2.0"
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation("com.squareup.okio:okio:$okioVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation("com.squareup.okio:okio-nodefilesystem:$okioVersion")
             }
         }
     }

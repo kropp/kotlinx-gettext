@@ -16,9 +16,11 @@
 
 package name.kropp.kotlinx.gettext
 
-import okio.Source
-import okio.source
-
-public actual fun resource(name: String): Source {
-    return Thread.currentThread().contextClassLoader.getResourceAsStream(name)!!.source()
-}
+public actual fun resource(name: String): List<String> =
+    Thread.currentThread()
+        .contextClassLoader
+        .getResourceAsStream(name)!!
+        .reader()
+        .use {
+            it.readLines()
+        }

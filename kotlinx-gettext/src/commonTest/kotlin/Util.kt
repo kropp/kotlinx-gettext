@@ -16,6 +16,4 @@
 
 package name.kropp.kotlinx.gettext
 
-import okio.Source
-
-public expect fun resource(name: String): Source
+public expect fun resource(name: String): List<String>

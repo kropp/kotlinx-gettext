@@ -16,14 +16,9 @@
 
 package name.kropp.kotlinx.gettext
 
-import okio.*
-import okio.Path.Companion.toPath
 
 external val __dirname: dynamic
 
-actual fun resource(name: String): Source {
-    val cwd = __dirname.toString().toPath()
-    val projectRoot = cwd.parent!!.parent!!.parent!!.parent!!.parent!!
-    val resourcePath = projectRoot / "kotlinx-gettext" / "build" / "processedResources" / "js" / "test" / name
-    return NodeJsFileSystem.source(resourcePath)
+actual fun resource(name: String): List<String> {
+    return emptyList()
 }

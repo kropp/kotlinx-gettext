@@ -16,7 +16,6 @@
 
 package name.kropp.kotlinx.gettext
 
- import okio.source
 import java.io.InputStream
 import java.text.MessageFormat
 
@@ -64,4 +63,4 @@ public fun I18n.trnc(context: String, text: String, plural: String, n: Long, var
  * Load translations for given [locale] from given input stream.
  */
 public fun Gettext.Companion.load(locale: Locale, s: InputStream): Gettext =
-    load(locale, s.source())
+    load(locale, s.reader().use { it.readLines() })
