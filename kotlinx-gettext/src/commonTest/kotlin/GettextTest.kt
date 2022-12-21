@@ -41,4 +41,12 @@ class GettextTest {
 
         assertEquals("empty", gettext.tr("empty"))
     }
+
+    @Test
+    fun plural() {
+        val gettext = Gettext.load(Locale("de"), resource("plural.po"))
+
+        assertEquals("Aktualisierung verfügbar", gettext.trn("Update available", "{{count}} updates available", 1, "count" to "1"))
+        assertEquals("2 Aktualisierungen verfügbar", gettext.trn("Update available", "{{count}} updates available", 2, "count" to "2"))
+    }
 }

@@ -1,0 +1,8 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Update available"
+msgid_plural "{{count}} updates available"
+msgstr[0] "Aktualisierung verfügbar"
+msgstr[1] "{{count}} Aktualisierungen verfügbar"
