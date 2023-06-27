@@ -19,13 +19,11 @@ kotlin {
 
     jvm {
         java {
-            withSourcesJar()
         }
     }
 
     js(IR) {
         nodejs {
-           testTask {}
         }
     }
 

@@ -29,7 +29,7 @@ allprojects {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = "7.5"
+    gradleVersion = "8.4"
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-bin.zip"
-    distributionSha256Sum = "cb87f222c5585bd46838ad4db78463a5c5f3d336e5e2b98dc7c0c586527351c2"
+    distributionSha256Sum = "3e1af3ae886920c3ac87f7a91f816c0c7c436f276a6eefdb3da152100fef72ae"
 }
