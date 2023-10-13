@@ -1,11 +1,11 @@
 plugins {
     kotlin("jvm")
-    id("name.kropp.kotlinx-gettext") version "0.5.2"
+    id("name.kropp.kotlinx-gettext") version "0.6.0"
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("name.kropp.kotlinx-gettext:kotlinx-gettext-jvm:0.5.2")
+    implementation("name.kropp.kotlinx-gettext:kotlinx-gettext-jvm:0.6.0")
 }
 
 gettext {
