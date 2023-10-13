@@ -74,7 +74,7 @@ public class PoData(
             var id: String? = null
             var str = ""
             var plural: String? = null
-            var cases = mutableListOf<String>()
+            var cases = mutableListOf<String?>()
 
             var key = Key.Unknown
 
@@ -93,18 +93,25 @@ public class PoData(
                             cases = mutableListOf()
                             key = Key.Unknown
                         }
-                        line.startsWith("msgctxt ") -> { context = line.substringAfter("msgctxt ").unescape(); key =
-                            Key.Context
+                        line.startsWith("msgctxt ") -> {
+                            context = line.substringAfter("msgctxt ").unescape()
+                            key = Key.Context
                         }
-                        line.startsWith("msgid ") -> { id = line.substringAfter("msgid ").unescape(); key = Key.Id
+                        line.startsWith("msgid ") -> {
+                            id = line.substringAfter("msgid ").unescape()
+                            key = Key.Id
                         }
-                        line.startsWith("msgid_plural ") -> { plural = line.substringAfter("msgid_plural ").unescape(); key =
-                            Key.Plural
+                        line.startsWith("msgid_plural ") -> {
+                            plural = line.substringAfter("msgid_plural ").unescape()
+                            key = Key.Plural
                         }
-                        line.startsWith("msgstr ") -> { str = line.substringAfter("msgstr ").unescape(); key = Key.Str
+                        line.startsWith("msgstr ") -> {
+                            str = line.substringAfter("msgstr ").unescape()
+                            key = Key.Str
                         }
-                        line.startsWith("msgstr[") -> { cases += line.substringAfter("msgstr[").substringAfter("] ").unescape(); key =
-                            Key.Cases
+                        line.startsWith("msgstr[") -> {
+                            cases += line.substringAfter("msgstr[").substringAfter("] ").unescape().ifEmpty { null }
+                            key = Key.Cases
                         }
                         else -> {
                             val trimmed = line.trim('"')
@@ -136,7 +143,7 @@ public class PoData(
             return unquoted.replace("\\\"", "\"").replace("\\n", "\n")
         }
 
-        private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String>) {
+        private fun entry(entries: MutableMap<String, PoEntry>, context: String?, id: String?, str: String, plural: String?, cases: List<String?>) {
             if (!id.isNullOrEmpty() && (str.isNotEmpty() || cases.isNotEmpty())) {
                 entries[if (context != null) "$context$CONTEXT_DELIMITER$id" else id] = PoEntry(str, plural, cases.toTypedArray())
             }

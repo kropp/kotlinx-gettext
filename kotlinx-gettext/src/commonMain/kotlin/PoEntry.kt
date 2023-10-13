@@ -22,5 +22,5 @@ package name.kropp.kotlinx.gettext
 public class PoEntry(
     public val str: String,
     public val plural: String?,
-    public val cases: Array<String>
+    public val cases: Array<String?>
 )

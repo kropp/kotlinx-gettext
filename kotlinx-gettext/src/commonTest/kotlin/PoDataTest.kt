@@ -63,4 +63,20 @@ class PoDataTest {
 
         assertNull(po["empty"])
     }
+
+    @Test
+    fun ignoreEmptyPlural() {
+        val po = PoData.read(resource("empty-plural.po"))
+
+        assertNull(po["Update available", 1])
+        assertNull(po["Update available", 2])
+    }
+
+    @Test
+    fun someEmptyPlural() {
+        val po = PoData.read(resource("some-plural.po"))
+
+        assertEquals("Aktualisierung verfügbar", po["Update available", 1])
+        assertNull(po["Update available", 2])
+    }
 }
