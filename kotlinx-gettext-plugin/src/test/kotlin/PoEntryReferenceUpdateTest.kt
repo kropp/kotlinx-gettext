@@ -23,9 +23,9 @@ class PoEntryReferenceUpdateTest {
     @Test
     fun simple() {
         val po = PoFile(listOf(
-            entry("id1", "src/main/kotlin/File.kt:123")
+            entry("id1", null, "src/main/kotlin/File.kt:123")
         )).update(listOf(
-            entry("id1", "src/main/kotlin/File.kt:125")
+            entry("id1", null, "src/main/kotlin/File.kt:125")
         ))
 
         assertEquals(1, po.entries.size)
@@ -34,13 +34,28 @@ class PoEntryReferenceUpdateTest {
     }
 
     @Test
+    fun contextual() {
+        val po = PoFile(listOf(
+            entry("id1", "ctx1", "src/main/kotlin/File.kt:123")
+        )).update(listOf(
+            entry("id1", "ctx2", "src/main/kotlin/File.kt:125")
+        ))
+
+        assertEquals(2, po.entries.size)
+        assertEquals(1, po.entries[0].references.size)
+        assertEquals("src/main/kotlin/File.kt:123", po.entries[0].references[0])
+        assertEquals(1, po.entries[1].references.size)
+        assertEquals("src/main/kotlin/File.kt:125", po.entries[1].references[0])
+    }
+
+    @Test
     fun multiple() {
         val po = PoFile(listOf(
-            entry("id1", "src/main/kotlin/File.kt:123", "src/main/kotlin/Other.kt:87"),
-            entry("id2", "src/main/kotlin/File.kt:45"),
+            entry("id1", null, "src/main/kotlin/File.kt:123", "src/main/kotlin/Other.kt:87"),
+            entry("id2", null, "src/main/kotlin/File.kt:45"),
         )).update(listOf(
-            entry("id1", "src/main/kotlin/File.kt:125"),
-            entry("id3"),
+            entry("id1", null, "src/main/kotlin/File.kt:125"),
+            entry("id3", null),
         ))
 
         assertEquals(3, po.entries.size)
@@ -52,5 +67,5 @@ class PoEntryReferenceUpdateTest {
         assertEquals(0, po.entries[2].references.size)
     }
 
-    private fun entry(id: String, vararg references: String) = PoEntry(emptyList(), emptyList(), references.toList(), null, emptyList(), null, id, null, emptyList())
+    private fun entry(id: String, context: String?, vararg references: String) = PoEntry(emptyList(), emptyList(), references.toList(), null, emptyList(), context, id, null, emptyList())
 }

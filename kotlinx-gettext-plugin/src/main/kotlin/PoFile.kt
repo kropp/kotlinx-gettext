@@ -36,9 +36,9 @@ class PoFile(
     }
 
     fun update(messages: List<PoEntry>): PoFile {
-        val grouped = messages.groupBy { it.text }.toMutableMap()
+        val grouped = messages.groupBy { it.context to it.text }.toMutableMap()
         val newEntries = entries.map { entry ->
-            val updated = grouped.remove(entry.text)
+            val updated = grouped.remove(entry.context to entry.text)
             if (updated != null) {
                 val newReferences = updated.flatMap { it.references }
                 val updatedPaths = newReferences.map { it.substringBefore(':') }
