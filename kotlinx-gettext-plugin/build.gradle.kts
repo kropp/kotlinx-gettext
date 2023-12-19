@@ -14,11 +14,11 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
 
     compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
-    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.0.0")
+    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.1.0")
 
     testImplementation(kotlin("test"))
-    testCompileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.9")
+    testCompileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")
 }
 
 tasks.test {
