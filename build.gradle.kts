@@ -1,8 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.9.21" apply false
-    id("com.google.devtools.ksp") version "1.9.21-1.0.15" apply false
+    kotlin("multiplatform") version "2.0.10" apply false
+    id("com.google.devtools.ksp") version "2.0.10-1.0.24" apply false
     wrapper
 }
 
@@ -22,8 +24,11 @@ allprojects {
     }
 
     tasks.withType<KotlinCompile>().all {
-        kotlinOptions.jvmTarget = "11"
-        kotlinOptions.jvmTarget = "11"
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+            languageVersion.set(KotlinVersion.KOTLIN_2_0)
+            apiVersion.set(KotlinVersion.KOTLIN_2_0)
+        }
     }
 }
 
