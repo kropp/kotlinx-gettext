@@ -21,8 +21,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.com.intellij.mock.MockProject
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
+import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import java.io.File
@@ -30,11 +29,11 @@ import java.io.File
 const val KOTLIN_PLUGIN_ID = "name.kropp.kotlinx-gettext"
 
 @OptIn(ExperimentalCompilerApi::class)
-@AutoService(ComponentRegistrar::class)
-class GettextComponentRegistrar(
+@AutoService(CompilerPluginRegistrar::class)
+class GettextCompilerPluginRegistrar(
     private val defaultPotFile: String,
     private val defaultKeywords: List<String>,
-) : ComponentRegistrar {
+) : CompilerPluginRegistrar() {
 
     @Suppress("unused") // Used by service loader
     constructor() : this(
@@ -42,10 +41,10 @@ class GettextComponentRegistrar(
         defaultKeywords = listOf("tr"),
     )
 
-    override fun registerProjectComponents(
-        project: MockProject,
-        configuration: CompilerConfiguration
-    ) {
+    override val supportsK2: Boolean
+        get() = true
+
+    override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         val messageCollector = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
         val file = File(configuration.get(GettextCommandLineProcessor.ARG_POT_FILE, defaultPotFile))
         runCatching { file.parentFile.mkdirs() }
@@ -58,6 +57,6 @@ class GettextComponentRegistrar(
 
         val extension = GettextIrGenerationExtension(messageCollector, keywords, basePath, overwrite, file)
 
-        IrGenerationExtension.registerExtension(project, extension)
+        IrGenerationExtension.registerExtension(extension)
     }
 }
