@@ -137,13 +137,12 @@ fun trc(ctx: String, text: String) {}
         assertEquals("$DEFAULT_POT_HEADER\n\n#: main.kt:2\nmsgid \"Hello,\\n\\\"World\\\"!\"\nmsgstr \"\"\n", potFile)
     }
 
-    @Suppress("DEPRECATION")
     @OptIn(ExperimentalCompilerApi::class)
     private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()
             useIR = true
-            componentRegistrars = listOf(GettextComponentRegistrar(File(workingDir, "i18n.pot").absolutePath, defaultKeywords))
+            compilerPluginRegistrars = listOf(GettextCompilerPluginRegistrar(File(workingDir, "i18n.pot").absolutePath, defaultKeywords))
             inheritClassPath = true
         }.compile()
     }
