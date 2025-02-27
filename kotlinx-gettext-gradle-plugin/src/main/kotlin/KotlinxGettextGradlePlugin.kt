@@ -18,11 +18,11 @@ package name.kropp.kotlinx.gettext.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 const val KOTLIN_PLUGIN_ID = "name.kropp.kotlinx-gettext"
 const val KOTLIN_PLUGIN_GROUP = "name.kropp.kotlinx-gettext"
@@ -34,7 +34,7 @@ class KotlinxGettextGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
         val extension = target.extensions.create("gettext", GettextGradleExtension::class.java)
         target.tasks.register("gettext") {
-            it.dependsOn(target.tasks.withType(KotlinCompile::class.java))
+            it.dependsOn(target.tasks.withType(KotlinCompilationTask::class.java))
         }
         if (target.gradle.startParameter.taskNames.any { it.endsWith("gettext") }) {
             extension.enabled.set(true)

@@ -19,7 +19,7 @@ package name.kropp.kotlinx.gettext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
-import org.jetbrains.kotlin.ir.util.IdSignature
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 
 class KeywordSpec(
     private val keyword: String,
@@ -27,6 +27,7 @@ class KeywordSpec(
 ) {
     constructor(spec: String) : this(spec.substringBefore(':'), spec.substringAfter(':', "").let { if (it.isEmpty()) emptyList() else it.split(',').map { KeywordSpecArgument(it) } })
 
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
     fun matches(expression: IrCall): Boolean {
         return expression.symbol.owner.name.asString() == keyword
     }

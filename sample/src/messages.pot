@@ -19,12 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 
-#: src/main/kotlin/main.kt:22
+#: src/main/kotlin/main.kt:23
 msgid "Hello world!"
 msgstr ""
 
 #: src/main/kotlin/main.kt:23
 #: src/main/kotlin/main.kt:24
+#: src/main/kotlin/main.kt:25
 msgid "You have a message"
 msgid_plural "You have {0} messages"
 msgstr[0] ""
