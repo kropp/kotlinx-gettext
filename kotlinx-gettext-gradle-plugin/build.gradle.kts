@@ -1,16 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("java-gradle-plugin")
-    kotlin("jvm")
-    id("com.gradle.plugin-publish") version "1.2.1"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.gradle.plugin.publish)
     signing
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    implementation(kotlin("gradle-plugin-api"))
-    testImplementation(kotlin("test"))
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.gradle.plugin.api)
+    testImplementation(libs.kotlin.test)
 }
 
 gradlePlugin {

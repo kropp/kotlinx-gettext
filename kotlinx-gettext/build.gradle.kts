@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.net.URI
 
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     `java-library`
     `maven-publish`
     signing
@@ -33,21 +33,20 @@ kotlin {
     }
 
     sourceSets {
-        val okioVersion = "3.2.0"
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
-                implementation("com.squareup.okio:okio:$okioVersion")
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.okio)
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlin.test)
             }
         }
         val jsTest by getting {
             dependencies {
-                implementation("com.squareup.okio:okio-nodefilesystem:$okioVersion")
+                implementation(libs.okio.nodefilesystem)
             }
         }
     }

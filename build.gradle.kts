@@ -3,14 +3,15 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "2.0.10" apply false
-    id("com.google.devtools.ksp") version "2.0.10-1.0.24" apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.ksp) apply false
     wrapper
 }
 
 allprojects {
     group = "name.kropp.kotlinx-gettext"
-    version = "0.7.0"
+    version = rootProject.libs.versions.kotlinxGettext.get()
 
     repositories {
         mavenCentral()

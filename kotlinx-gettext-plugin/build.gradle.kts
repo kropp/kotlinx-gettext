@@ -4,23 +4,23 @@ import java.net.URI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
     `java-library`
     `maven-publish`
     signing
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+    implementation(libs.kotlin.stdlib)
+    compileOnly(libs.kotlin.compiler.embeddable)
 
-    compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
-    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
+    compileOnly(libs.auto.service.annotations)
+    ksp(libs.auto.service.ksp)
 
-    testImplementation(kotlin("test"))
-    testCompileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")
+    testImplementation(libs.kotlin.test)
+    testCompileOnly(libs.auto.service.annotations)
+    testImplementation(libs.kotlin.compile.testing)
 }
 
 tasks.test {
