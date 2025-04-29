@@ -27,11 +27,11 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile>().all {
+kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
-        languageVersion.set(KotlinVersion.KOTLIN_2_0)
-        apiVersion.set(KotlinVersion.KOTLIN_2_0)
+        jvmTarget = JvmTarget.JVM_11
+        languageVersion = KotlinVersion.KOTLIN_2_0
+        apiVersion = KotlinVersion.KOTLIN_2_0
     }
 }
 
@@ -49,28 +49,28 @@ publishing {
             from(components["java"])
 
             pom {
-                name.set("Kotlinx Gettext")
-                description.set("Kotlin Compiler plugin to extract strings for i18n in Gettext format")
-                url.set("https://github.com/kropp/kotlinx-gettext")
+                name = "Kotlinx Gettext"
+                description = "Kotlin Compiler plugin to extract strings for i18n in Gettext format"
+                url = "https://github.com/kropp/kotlinx-gettext"
 
                 scm {
-                    connection.set("scm:git:git://github.com/kropp/kotlinx-gettext")
-                    developerConnection.set("scm:git:git://github.com/kropp/kotlinx-gettext")
-                    url.set("https://github.com/kropp/kotlinx-gettext/tree/main")
+                    connection = "scm:git:git://github.com/kropp/kotlinx-gettext"
+                    developerConnection = "scm:git:git://github.com/kropp/kotlinx-gettext"
+                    url = "https://github.com/kropp/kotlinx-gettext/tree/main"
                 }
 
                 licenses {
                     license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        name = "The Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                     }
                 }
 
                 developers {
                     developer {
-                        id.set("kropp")
-                        name.set("Victor Kropp")
-                        email.set("victor@kropp.name")
+                        id = "kropp"
+                        name = "Victor Kropp"
+                        email = "victor@kropp.name"
                     }
                 }
             }

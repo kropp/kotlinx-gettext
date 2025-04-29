@@ -64,28 +64,28 @@ publishing {
         artifact(javadocJar.get())
 
         pom {
-            name.set("Kotlinx Gettext")
-            description.set("Kotlin Gettext i18n library")
-            url.set("https://github.com/kropp/kotlinx-gettext")
+            name = "Kotlinx Gettext"
+            description = "Kotlin Gettext i18n library"
+            url = "https://github.com/kropp/kotlinx-gettext"
 
             scm {
-                connection.set("scm:git:git://github.com/kropp/kotlinx-gettext")
-                developerConnection.set("scm:git:git://github.com/kropp/kotlinx-gettext")
-                url.set("https://github.com/kropp/kotlinx-gettext/tree/main")
+                connection = "scm:git:git://github.com/kropp/kotlinx-gettext"
+                developerConnection = "scm:git:git://github.com/kropp/kotlinx-gettext"
+                url = "https://github.com/kropp/kotlinx-gettext/tree/main"
             }
 
             licenses {
                 license {
-                    name.set("The Apache License, Version 2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    name = "The Apache License, Version 2.0"
+                    url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
                 }
             }
 
             developers {
                 developer {
-                    id.set("kropp")
-                    name.set("Victor Kropp")
-                    email.set("victor@kropp.name")
+                    id = "kropp"
+                    name = "Victor Kropp"
+                    email = "victor@kropp.name"
                 }
             }
         }
