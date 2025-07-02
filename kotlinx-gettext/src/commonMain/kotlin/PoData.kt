@@ -16,9 +16,6 @@
 
 package name.kropp.kotlinx.gettext
 
-import okio.Source
-import okio.buffer
-
 /**
  * Low-level representation of PO file.
  * Clients should use [I18n] instead.
@@ -66,7 +63,7 @@ public class PoData(
         /**
          * Loads PO file from provided [input].
          */
-        public fun read(input: Source): PoData {
+        public fun read(input: Reader): PoData {
             val entries = mutableMapOf<String, PoEntry>()
             var pluralRule = ""
 
@@ -78,10 +75,9 @@ public class PoData(
 
             var key = Key.Unknown
 
-            val bufferedReader = input.buffer()
             try {
                 while(true) {
-                    val rawLine = bufferedReader.readUtf8Line() ?: break
+                    val rawLine = input.readLine() ?: break
                     val line = rawLine.replace("\\n", "\n")
                     when {
                         line.isBlank() -> {
@@ -136,7 +132,7 @@ public class PoData(
                 }
                 entry(entries, context, id, str, plural, cases)
             } finally {
-                bufferedReader.close()
+                input.close()
             }
             return PoData(entries, PluralRule(pluralRule))
         }
@@ -154,4 +150,3 @@ public class PoData(
         }
     }
 }
-

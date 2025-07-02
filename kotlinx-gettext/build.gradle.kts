@@ -36,7 +36,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.okio)
             }
         }
         val commonTest by getting {
@@ -46,7 +45,6 @@ kotlin {
         }
         val jsTest by getting {
             dependencies {
-                implementation(libs.okio.nodefilesystem)
             }
         }
     }

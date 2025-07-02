@@ -16,8 +16,6 @@
 
 package name.kropp.kotlinx.gettext
 
-import okio.Source
-
 /**
  * Provides `gettext`-compatible interface for string translation via PO files.
  */
@@ -101,18 +99,18 @@ public class Gettext private constructor(
 
     public companion object {
         /**
-         * Load translations for given [locale] from the given [source].
+         * Load translations for given [locale] from the given [reader].
          */
-        public fun load(locale: Locale, source: Source): Gettext {
-            return Gettext(locale, listOf(PoData.read(source)))
+        public fun load(locale: Locale, reader: Reader): Gettext {
+            return Gettext(locale, listOf(PoData.read(reader)))
         }
 
         /**
-         * Load translations for given [locale] from given [sources].
-         * Sources are checked in order of priority, first available translation is used.
+         * Load translations for given [locale] from given [readers].
+         * Readers are checked in order of priority, first available translation is used.
          */
-        public fun load(locale: Locale, vararg sources: Source): Gettext {
-            return Gettext(locale, sources.map { source -> PoData.read(source) })
+        public fun load(locale: Locale, vararg readers: Reader): Gettext {
+            return Gettext(locale, readers.map { reader -> PoData.read(reader) })
         }
 
         /**
