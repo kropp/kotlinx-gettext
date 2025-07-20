@@ -51,6 +51,13 @@ class PoDataTest {
     }
 
     @Test
+    fun quotedMultilineStrings() {
+        val po = PoData.read(resource("quoted-multiline.po"))
+
+        assertEquals("Linia unu.\nLinia doi cu \"ghilimele\".", po["Line one.\nLine two with \"quotes\"."])
+    }
+
+    @Test
     fun excessWhitespace() {
         val po = PoData.read(resource("whitespace.po"))
 

@@ -117,15 +117,19 @@ public class PoData(
                             val trimmed = line.trim('"')
                             if (id?.isEmpty() == true && key == Key.Str && trimmed.startsWith("Plural-Forms:")) {
                                 pluralRule = trimmed.substringAfter("plural=").substringBefore(';')
-                            } else when(key) {
-                                Key.Context -> context += trimmed
-                                Key.Id -> id += trimmed
-                                Key.Str -> str += trimmed
-                                Key.Plural -> plural += trimmed
-                                Key.Cases -> if (cases.isNotEmpty()) {
-                                    cases[cases.size - 1] += trimmed
+                            } else {
+                                val unescaped = rawLine.unescape()
+                                when (key) {
+                                    Key.Context -> context += unescaped
+                                    Key.Id -> id += unescaped
+                                    Key.Str -> str += unescaped
+                                    Key.Plural -> plural += unescaped
+                                    Key.Cases -> if (cases.isNotEmpty()) {
+                                        cases[cases.size - 1] += unescaped
+                                    }
+
+                                    else -> {}
                                 }
-                                else -> {}
                             }
                         }
                     }

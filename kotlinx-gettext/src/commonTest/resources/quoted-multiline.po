@@ -1,0 +1,9 @@
+msgid ""
+msgstr ""
+
+msgid ""
+"Line one.\n"
+"Line two with \"quotes\"."
+msgstr ""
+"Linia unu.\n"
+"Linia doi cu \"ghilimele\"."
