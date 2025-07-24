@@ -15,6 +15,7 @@ rootProject.plugins.withType<NodeJsRootPlugin> {
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
     explicitApi()
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -22,30 +23,23 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
-    jvm {
-        java {
-        }
+    jvm()
+
+    js {
+        nodejs()
     }
 
-    js(IR) {
-        nodejs {
-        }
-    }
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlin.stdlib)
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-            }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }
