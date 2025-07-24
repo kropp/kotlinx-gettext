@@ -58,6 +58,16 @@ class PoDataTest {
     }
 
     @Test
+    fun quotedMultilineStrings2() {
+        val po = PoData.read(resource("quoted-multiline-2.po"))
+
+        assertEquals(
+            "Wähle jede Nacht 1 Spieler & 1 guten Charakter: Der Spieler ist morgen \"besessen\" davon, dass er der Charakter ist, oder könnte hingerichtet werden.",
+            po["Each night, choose a player & a good character: they are \"mad\" they are this character tomorrow, or might be executed."]
+        )
+    }
+
+    @Test
     fun excessWhitespace() {
         val po = PoData.read(resource("whitespace.po"))
 
