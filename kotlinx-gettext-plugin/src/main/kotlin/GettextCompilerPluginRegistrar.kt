@@ -44,6 +44,8 @@ class GettextCompilerPluginRegistrar(
     override val supportsK2: Boolean
         get() = true
 
+    val pluginId: String = KOTLIN_PLUGIN_ID
+
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         val messageCollector = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
         val file = File(configuration.get(GettextCommandLineProcessor.ARG_POT_FILE, defaultPotFile))
