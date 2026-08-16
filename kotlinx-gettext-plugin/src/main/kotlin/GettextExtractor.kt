@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.IrFileEntry
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class GettextExtractor(
@@ -30,13 +31,20 @@ class GettextExtractor(
     private val relativePath: String,
     private val fileEntry: IrFileEntry,
 ) : IrElementTransformerVoid() {
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
     override fun visitCall(expression: IrCall): IrExpression {
         super.visitCall(expression)
 
-        val info = keywords.firstOrNull { it.matches(expression) }?.process(expression, "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}")
-        if (info != null) {
-            poEntries.add(info)
-            messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] ${info.references[0]} \"${info.text}\"")
+        val matched = keywords.firstOrNull { it.matches(expression) }
+        if (matched != null) {
+            val name = expression.symbol.owner.name.asString()
+            val info = matched.process(expression, "$relativePath:${fileEntry.getLineNumber(expression.startOffset) + 1}")
+            if (info != null) {
+                poEntries.add(info)
+                messageCollector.report(CompilerMessageSeverity.OUTPUT, "[gettext] ${info.references[0]} \"${info.text}\"")
+            } else {
+                messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] MATCHED keyword '$name' but process returned null")
+            }
         }
 
         return expression

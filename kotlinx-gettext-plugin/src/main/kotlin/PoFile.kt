@@ -26,10 +26,13 @@ class PoFile(
     val header: PoEntry = DEFAULT_POT_HEADER
 ) {
     fun write(out: OutputStream) {
+        // GNU gettext mandates LF line endings in .po/.pot files regardless of the host
+        // platform, so emit "\n" explicitly instead of PrintStream.println() which would
+        // use the platform separator (CRLF on Windows).
         PrintStream(out, false, Charsets.UTF_8).use { writer ->
-            writer.println(header)
+            writer.print("$header\n")
             for (message in entries) {
-                writer.println()
+                writer.print("\n")
                 message.write(writer)
             }
         }

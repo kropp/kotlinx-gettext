@@ -41,6 +41,9 @@ class GettextCompilerPluginRegistrar(
         defaultKeywords = listOf("tr"),
     )
 
+    override val pluginId: String
+        get() = KOTLIN_PLUGIN_ID
+
     override val supportsK2: Boolean
         get() = true
 

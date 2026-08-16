@@ -13,14 +13,18 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+    // Pin kotlin-compiler-embeddable to the same version as the Kotlin Gradle plugin (2.3.10):
+    // the compiler plugin must be compiled against the exact compiler version it runs inside.
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:2.3.10")
 
     compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
     ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
 
     testImplementation(kotlin("test"))
     testCompileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")
+    // kotlin-compile-testing 1.5.0 embeds compiler 1.8.0, which cannot read Kotlin 2.3 metadata;
+    // the maintained fork kctfork 0.12.1 embeds compiler 2.3.0 (closest to our 2.3.10).
+    testImplementation("dev.zacsweers.kctfork:core:0.12.1")
 }
 
 tasks.test {
@@ -30,8 +34,8 @@ tasks.test {
 tasks.withType<KotlinCompile>().all {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
-        languageVersion.set(KotlinVersion.KOTLIN_2_0)
-        apiVersion.set(KotlinVersion.KOTLIN_2_0)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
+        apiVersion.set(KotlinVersion.KOTLIN_2_3)
     }
 }
 
