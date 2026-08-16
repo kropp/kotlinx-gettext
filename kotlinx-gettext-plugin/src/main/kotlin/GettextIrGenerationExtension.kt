@@ -47,7 +47,7 @@ class GettextIrGenerationExtension(
             GettextExtractor(
                 messageCollector,
                 poEntries,
-                keywords.map { KeywordSpec(it) },
+                keywords.map { KeywordSpec(it, messageCollector) },
                 relativePath,
                 file.fileEntry
             )

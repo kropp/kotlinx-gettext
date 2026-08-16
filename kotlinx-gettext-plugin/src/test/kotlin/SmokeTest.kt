@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package name.kropp.kotlinx.gettext
 
+import com.tschuchort.compiletesting.CompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
@@ -138,10 +141,9 @@ fun trc(ctx: String, text: String) {}
     }
 
     @OptIn(ExperimentalCompilerApi::class)
-    private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): KotlinCompilation.Result {
+    private fun compile(vararg sourceFile: SourceFile, defaultKeywords: List<String> = listOf("tr")): CompilationResult {
         return KotlinCompilation().apply {
             sources = sourceFile.toList()
-            useIR = true
             compilerPluginRegistrars = listOf(GettextCompilerPluginRegistrar(File(workingDir, "i18n.pot").absolutePath, defaultKeywords))
             inheritClassPath = true
         }.compile()

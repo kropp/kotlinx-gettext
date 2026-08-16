@@ -62,34 +62,34 @@ data class PoEntry(
 ) {
     fun write(out: PrintStream) {
         for (comment in comments) {
-            out.println("# $comment")
+            out.print("# $comment\n")
         }
         for (comment in extractedComments) {
-            out.println("#. $comment")
+            out.print("#. $comment\n")
         }
         for (reference in references) {
-            out.println("#: $reference")
+            out.print("#: $reference\n")
         }
         if (flags != null) {
-            out.println("#, $flags")
+            out.print("#, $flags\n")
         }
         for (prev in previous) {
-            out.println("#| $prev")
+            out.print("#| $prev\n")
         }
         if (context != null) {
-            out.println("msgctxt \"${context.escape()}\"")
+            out.print("msgctxt \"${context.escape()}\"\n")
         }
-        out.println("msgid \"${text.escape()}\"")
+        out.print("msgid \"${text.escape()}\"\n")
         if (plural != null) {
-            out.println("msgid_plural \"${plural.escape()}\"")
+            out.print("msgid_plural \"${plural.escape()}\"\n")
             cases.forEachIndexed { idx, msg ->
-                out.println("msgstr[$idx] \"${msg.escape()}\"")
+                out.print("msgstr[$idx] \"${msg.escape()}\"\n")
             }
         } else {
             if (cases.isEmpty()) {
-                out.println("msgstr \"\"")
+                out.print("msgstr \"\"\n")
             } else {
-                out.println("msgstr \"${cases[0].escape()}\"")
+                out.print("msgstr \"${cases[0].escape()}\"\n")
             }
         }
     }

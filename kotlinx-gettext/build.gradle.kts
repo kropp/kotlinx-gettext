@@ -1,17 +1,13 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.net.URI
 
+// NOTE: java-library is intentionally NOT applied here. Kotlin 2.3's
+// checkKotlinGradlePluginConfigurationErrors reports java/java-library as
+// incompatible with the Kotlin multiplatform plugin.
 plugins {
     kotlin("multiplatform")
-    `java-library`
     `maven-publish`
     signing
-}
-
-rootProject.plugins.withType<NodeJsRootPlugin> {
-    rootProject.the<NodeJsRootExtension>().download = false
 }
 
 kotlin {

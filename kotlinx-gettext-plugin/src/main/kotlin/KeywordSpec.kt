@@ -16,6 +16,8 @@
 
 package name.kropp.kotlinx.gettext
 
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
+import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
@@ -23,9 +25,10 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 
 class KeywordSpec(
     private val keyword: String,
-    private val args: List<KeywordSpecArgument>
+    private val args: List<KeywordSpecArgument>,
+    private val messageCollector: MessageCollector = MessageCollector.NONE
 ) {
-    constructor(spec: String) : this(spec.substringBefore(':'), spec.substringAfter(':', "").let { if (it.isEmpty()) emptyList() else it.split(',').map { KeywordSpecArgument(it) } })
+    constructor(spec: String, messageCollector: MessageCollector = MessageCollector.NONE) : this(spec.substringBefore(':'), spec.substringAfter(':', "").let { if (it.isEmpty()) emptyList() else it.split(',').map { KeywordSpecArgument(it) } }, messageCollector)
 
     @OptIn(UnsafeDuringIrConstructionAPI::class)
     fun matches(expression: IrCall): Boolean {
@@ -54,16 +57,29 @@ class KeywordSpec(
     }
 
     private fun getStringOrNull(expression: IrCall, index: Int): String? {
-        val valueArgument = expression.getValueArgument(index)
-        if (valueArgument is IrConst<*> && valueArgument.kind == IrConstKind.String) {
-            @Suppress("UNCHECKED_CAST")
-            return (valueArgument as IrConst<String>).value
+        // IrMemberAccessExpression.getValueArgument is annotated @DeprecatedForRemovalCompilerApi
+        // (ERROR level since Kotlin 2.1.20), so we call it via reflection to keep the plugin
+        // source-compatible across compiler versions. IrConst.kind/value, on the other hand, are
+        // plain abstract vars in Kotlin 2.3 (verified by javap) and can be accessed directly.
+        val arg = try {
+            IrCall::class.java.getMethod("getValueArgument", Int::class.javaPrimitiveType)
+                .invoke(expression, index)
+        } catch (e: Exception) {
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] Failed to call getValueArgument at index $index: ${e.message}")
+            return null
+        } ?: run {
+            messageCollector.report(CompilerMessageSeverity.INFO, "[gettext] arg at index $index is null")
+            return null
         }
-        return null
+
+        return if (arg is IrConst && arg.kind == IrConstKind.String) {
+            arg.value as? String
+        } else {
+            null
+        }
     }
 
     private fun flags(text: String): String? {
-        return if ('{' in text) return "java-format" else null
+        return if ('{' in text) "java-format" else null
     }
 }
-
